@@ -1,0 +1,109 @@
+name: _build
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+        description: 'OpenEdge version to use'
+      execute_unittests:
+        type: boolean
+        description: 'Execute unit tests'
+        default: false
+      evaluate_unittests:
+        type: boolean
+        description: 'Evaluate unit test results'
+        default: false
+      build_artifacts_name:
+        type: string
+        description: 'Build artifacts'
+        default: 'build-artifacts-${{ inputs.version }}.${{ github.run_number }}'
+    outputs:
+      build_artifacts_name: 
+        description: 'Build artifiacts name'
+        value:  ${{ inputs.build_artifacts_name }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          path: src
+
+      # - name: Login to Docker registry
+      #   uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20  # v3.1.0
+      #   with:
+      #     username: ${{ secrets.REGISTRY_USERNAME }}
+      #     password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build Docker image name
+        env:
+          OPENEDGE_VERSION: "${{ inputs.version }}"
+          IMAGE_REF: "devbfvio/openedge-compiler"       
+          EXECUTE_UNITTESTS: "${{ inputs.execute_unittests }}"      
+        run: |
+          echo "OPENEDGE_VERSION=${OPENEDGE_VERSION}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${IMAGE_REF}:${OPENEDGE_VERSION}" >> $GITHUB_ENV
+          echo "EXECUTE_UNITTESTS=${EXECUTE_UNITTESTS}" >> $GITHUB_ENV
+          
+      - name: Docker pull image
+        run: |
+          docker pull ${IMAGE_NAME}
+
+      - name: Get flattened version  # get the flattened minor version 12.2.10 --> 122
+        id: getflatversion
+        uses: bfv/openedge-flatversion@15a31eb3215fabc117263096b4f895c47181a823  # v1.1.0
+        with:
+          version: ${{ inputs.version }}
+  
+      - name: License unpack  # get progress.cfg from secret PROGRESS_CFG_12x
+        run: |
+          mkdir license
+          echo fetching progress.cfg from secret PROGRESS_CFG_${{steps.getflatversion.outputs.flat-version}}
+          echo "${{ secrets[format('PROGRESS_CFG_{0}', steps.getflatversion.outputs.flat-version)] }}" | base64 --decode > license/progress.cfg
+          ls -l license | grep -v '^total'
+      
+      - name: Build
+        run: | 
+          chmod 777 src/
+          mkdir artifacts
+          chmod 777 artifacts/
+          ls -l 
+          ls -l ${PWD}/license/
+          docker run -v ${PWD}/src:/app/src -v ${PWD}/artifacts:/app/artifacts -v ${PWD}/license/progress.cfg:/usr/dlc/progress.cfg --env ANT_HOME=/usr/dlc/ant --env EXECUTE_UNITTESTS=${EXECUTE_UNITTESTS} ${IMAGE_NAME} /app/src/scripts/build.sh
+          [[ -e src/results.xml ]] && cp src/results.xml ${PWD}/artifacts
+          ls -l ${PWD}/artifacts 
+
+      # - name: Check unit tests
+      #   if: ${{ inputs.execute_unittests == true && inputs.evaluate_unittests == true }}
+      #   uses: bfv/ablunit-results@9cfe2a9b92e39427a66571c915bfd954373f077a  # v0.2.0
+      #   id: unit-tests
+      #   with:
+      #     file: artifacts/results.xml
+      #     fail-on-error: true
+      #     errors-only: false
+      #     debug: false
+  
+      # - name: Copy extra files
+      #   run: |
+      #     ls -l artifacts | grep -v '^total'
+
+      - name: Add Git info
+        run: |
+          echo "sha=${GITHUB_SHA}" > artifacts/version.git.info
+          echo "branch=${GITHUB_REF}" >> artifacts/version.git.info
+          echo "buildnr=${{ github.run_number }}" >> artifacts/version.git.info
+          echo "openedge=${{ inputs.version }}" >> artifacts/version.git.info
+          cat artifacts/version.git.info
+  
+      - name: Save build artifacts
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808  # v4.3.3
+        with:
+          name: ${{ inputs.build_artifacts_name }}
+          path: artifacts/*
+          retention-days: 1
+  

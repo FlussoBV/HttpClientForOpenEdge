@@ -15,10 +15,10 @@
 
   <target name="initvars">
     <property name="srcdir" location="./src" />
-    <property name="rootdir" location="./" />
+    <property name="rootdir" location="./.." />
     <property name="builddir" location="${rootdir}/build" />
     <property name="artifactdir" location="${rootdir}/artifacts" />
-    <property name="configdir" location="${rootdir}/config" />
+    <property name="configdir" location="./config" />
     <property name="DLC" value="${env.DLC}" />
 
     <echo message="rootdir:          ${rootdir}" />
@@ -61,7 +61,6 @@
         <include name="**/*.p" />
         <include name="**/*.cls" />
         <exclude name=".builder/**/*" />
-        <exclude name="devtools/**/*" />
         <exclude name="sandbox/**/*" />
         <exclude name="**/test-*.p" /> 
       </fileset>
@@ -87,7 +86,7 @@
   
   <target name="package">
 
-    <PCTLibrary destFile="${artifactdir}/fwebh.pl" dlchome="${DLC}" noCompress="true"
+    <PCTLibrary destFile="${artifactdir}/httpclient.pl" dlchome="${DLC}" noCompress="true"
         cpInternal="utf-8" cpStream="utf-8">
       <fileset dir="${builddir}/rcode">
         <include name="**/*.r" />

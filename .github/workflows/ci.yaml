@@ -1,11 +1,30 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - "doc/**"
+      - "**.md"
+      - "**.puml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+run-name: ci - ${{ github.event.head_commit.message }}
 
 jobs:
-  hello_world:
-    runs-on: ubuntu-latest
 
-    steps:
-    - name: Say Hello
-      run: echo "Hello, World!"
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [ '12.8.6' ]
+    uses: ./.github/workflows/build.yaml
+    with:
+      version: ${{ matrix.version }}
+      execute_unittests: false
+      build_artifacts_name: 'build-artifacts-${{ matrix.version }}.${{ github.run_number }}'
+    secrets: inherit
+
