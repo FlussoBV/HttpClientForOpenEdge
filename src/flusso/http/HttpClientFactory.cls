@@ -35,30 +35,30 @@ SOFTWARE.
 block-level on error undo, throw.
 
 using flusso.http.HttpClientFactory.
-using flusso.http.IAppHttpClient.
+using flusso.http.IHttpClient.
 using Progress.Collections.HashMap.
 using OpenEdge.Core.String.
 
 class flusso.http.HttpClientFactory:
   
   var private static HttpClientFactory instance.
-  var private HashMap<String, IAppHttpClient> clients.
+  var private HashMap<String, IHttpClient> clients.
 
   constructor static HttpClientFactory():
     instance = new HttpClientFactory().
-    instance:clients = new HashMap<String, IAppHttpClient>().
+    instance:clients = new HashMap<String, IHttpClient>().
   end constructor.
 
   // return a new instance of AppHttpClient
-  method public static IAppHttpClient Get():
-    var IAppHttpClient client.
+  method public static IHttpClient Get():
+    var IHttpClient client.
     client = dynamic-new "flusso.http.AppHttpClient" ().
     return client.
   end method.  // Get
 
-  method public static IAppHttpClient Get(clientName as char):
+  method public static IHttpClient Get(clientName as char):
 
-    var IAppHttpClient client.
+    var IHttpClient client.
     
     client = instance:clients:GetValue(new String(clientName)).
     if not valid-object(client) then do:

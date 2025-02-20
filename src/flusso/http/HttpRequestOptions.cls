@@ -27,7 +27,7 @@ SOFTWARE.
     File        : HttpRequestOptions
     Purpose     : 
     Syntax      : 
-    Author(s)   : bronco
+    Author(s)   : bronco / Flusso B.V.
     Created     : Thu Jan 23 12:47:01 +01:00 2025
     Notes       : 
   ----------------------------------------------------------------------*/
