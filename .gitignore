@@ -1,0 +1,11 @@
+
+.builder/
+bin/
+db/
+tmp/
+
+*.r
+
+license/progress.cfg
+
+
