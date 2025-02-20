@@ -1,8 +1,11 @@
 
 .builder/
 .vscode/
+artifacts/
 bin/
+build/
 db/
+sandbox/
 tmp/
 
 *.r

@@ -1,0 +1,106 @@
+<project name="build" default="build" basedir=".">
+    
+  <property environment="env"/>
+
+  <taskdef resource="PCT.properties" />
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <typedef resource="types.properties" />
+
+  <target name="build" depends="initvars,init">
+    <echo message="env.ANT_HOME: ${env.ANT_HOME}" />
+    <antcall target="compile" />
+    <antcall target="unittest" />
+    <antcall target="package" />
+  </target>
+
+  <target name="initvars">
+    <property name="srcdir" location="./src" />
+    <property name="rootdir" location="./" />
+    <property name="builddir" location="${rootdir}/build" />
+    <property name="artifactdir" location="${rootdir}/artifacts" />
+    <property name="configdir" location="${rootdir}/config" />
+    <property name="DLC" value="${env.DLC}" />
+
+    <echo message="rootdir:          ${rootdir}" />
+    <echo message="srcdir:           ${srcdir}" />
+    <echo message="builddir:         ${builddir}" />
+    <echo message="artifactdir:      ${artifactdir}" />
+    <echo message="configdir:        ${configdir}" />
+    <echo message="executeUnittests: ${executeUnittests}" />
+    <echo message="DLC:              ${DLC}" />
+  </target>
+
+  <target name="init" unless="initialized">
+    <delete dir="${builddir}" failonerror="false" />
+    <mkdir dir="${builddir}" />  
+    <delete dir="${artifactdir}" failonerror="false" />
+    <mkdir dir="${artifactdir}" />  
+    <property name="initialized" value="true" />    
+  </target>
+  
+  <target name="compile" depends="initvars">
+    
+    <property name="dbdir" location="${builddir}/dbs/framework" />
+      
+    <mkdir dir="${builddir}/xref_out" />
+      
+    <PCTCompile destdir="${builddir}/rcode" dlchome="${DLC}" stopOnError="true" 
+        graphicalMode="false" forceCompile="true" MD5="true" 
+        keepXref="true" xrefDir="${builddir}/xref_out" 
+        requireFullKeywords="true" requireFullNames="true" requireFieldQualifiers="true"
+        paramfile="${configdir}/build-ci.compile.pf">
+      
+      <propath>
+        <pathelement path="${srcdir}" />
+        <pathelement path="${DLC}/tty/OpenEdge.Core.pl" />
+        <pathelement path="${DLC}/tty/netlib/OpenEdge.Net.pl" />
+        <pathelement path="${DLC}/tty/ablunit.pl" />
+      </propath>
+      
+      <fileset dir="${srcdir}">
+        <include name="**/*.p" />
+        <include name="**/*.cls" />
+        <exclude name=".builder/**/*" />
+        <exclude name="devtools/**/*" />
+        <exclude name="sandbox/**/*" />
+        <exclude name="**/test-*.p" /> 
+      </fileset>
+      
+    </PCTCompile>
+  </target>
+
+  <target name="unittest" if="executeUnittests">
+
+    <ABLUnit haltOnFailure="false" writeLog="true" dlchome="${DLC}">
+      <fileset dir="${srcdir}">
+        <include name="**/*_UT.cls" />
+      </fileset> 
+      <propath>
+        <pathelement path="${srcdir}" />
+        <pathelement path="${DLC}/tty/OpenEdge.Core.pl" />
+        <pathelement path="${DLC}/tty/netlib/OpenEdge.Net.pl" />
+        <pathelement path="${DLC}/tty/ablunit.pl" />
+      </propath>
+    </ABLUnit>
+    
+  </target>
+  
+  <target name="package">
+
+    <PCTLibrary destFile="${artifactdir}/fwebh.pl" dlchome="${DLC}" noCompress="true"
+        cpInternal="utf-8" cpStream="utf-8">
+      <fileset dir="${builddir}/rcode">
+        <include name="**/*.r" />
+        <exclude name="**/*_UT.r" />
+      </fileset>
+    </PCTLibrary>
+
+    <tar destfile="${artifactdir}/xref.tar.gz" compression="gzip" >
+      <fileset dir="${builddir}/xref_out">
+        <include name="**/*" />
+      </fileset>  
+    </tar>
+
+  </target>
+  
+</project>
