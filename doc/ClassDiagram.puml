@@ -1,0 +1,28 @@
+@startuml
+
+package "flusso.http" #DDDDDD {
+class           HttpResponse
+interface       IHttpClient
+class           AblHttpClient  <<IHttpClient>>
+class           DotnetHttpClient  <<IHttpClient>>
+class           HttpRequestOptions
+class           url  <<string>>
+class           body  <<data>>
+class           HttpClientFactory
+
+IHttpClient <|.. AblHttpClient
+IHttpClient <|.. DotnetHttpClient
+IHttpClient <|-- url
+IHttpClient <|-- body
+IHttpClient <|-- HttpRequestOptions
+IHttpClient --|> HttpResponse
+}
+
+package "flusso.factory" #DDDDDD {
+interface       IFactory
+class           Factory  <<IFactory>>
+IFactory            <|.. Factory
+HttpClientFactory   <|.. IFactory
+}
+@enduml
+
