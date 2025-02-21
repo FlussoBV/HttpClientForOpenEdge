@@ -12,5 +12,5 @@ if [ "$EXECUTE_UNITTESTS" = "true" ]; then
 fi
 
 ${ANT_HOME}/bin/ant -f ${scriptpath}/../build.xml -lib /usr/dlc/pct ${unittestExpr}
-echo "ANT Exit code: $?"
+
 $DLC/bin/prolib /app/artifacts/httpclient.pl -list > /app/artifacts/httpclient-rcode.list
