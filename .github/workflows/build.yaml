@@ -47,7 +47,7 @@ jobs:
           EXECUTE_UNITTESTS: "${{ inputs.execute_unittests }}"      
         run: |
           echo "OPENEDGE_VERSION=${OPENEDGE_VERSION}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${IMAGE_REF}:${OPENEDGE_VERSION}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${IMAGE_REF}:${OPENEDGE_VERSION}-dotnet8" >> $GITHUB_ENV
           echo "EXECUTE_UNITTESTS=${EXECUTE_UNITTESTS}" >> $GITHUB_ENV
           
       - name: Docker pull image
@@ -72,7 +72,6 @@ jobs:
           chmod 777 src/
           mkdir artifacts
           chmod 777 artifacts/
-          ls -l 
           ls -l ${PWD}/license/
           docker run -v ${PWD}/src:/app/src -v ${PWD}/artifacts:/app/artifacts -v ${PWD}/license/progress.cfg:/usr/dlc/progress.cfg --env ANT_HOME=/usr/dlc/ant --env EXECUTE_UNITTESTS=${EXECUTE_UNITTESTS} ${IMAGE_NAME} /app/src/scripts/build.sh
           [[ -e src/results.xml ]] && cp src/results.xml ${PWD}/artifacts
