@@ -28,8 +28,11 @@ class flusso.factory.Factory implements IFactory:
     field obj as Progress.Lang.Object
     .
 
-    constructor public Factory():
-    LoadDefinitions("factory.json").  
+  constructor public Factory():
+  end constructor.
+
+  constructor public Factory(jsonDefinitionFile as char):
+    LoadDefinitions(jsonDefinitionFile).  
   end constructor.
 
   /**
