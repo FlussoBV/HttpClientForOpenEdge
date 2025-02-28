@@ -16,9 +16,6 @@ using flusso.http.HttpRequestOptions.
 
 class flusso.http.HttpRequestOptions:
 
-  define public property Accept      as char initial "*/*" no-undo get. private set.
-  define public property ContentType as char               no-undo get. private set.
-
   define public property Headers         as HashMap<String, String> no-undo get. private set.
   define public property QueryParameters as HashMap<String, String> no-undo get. private set.
 
@@ -29,6 +26,8 @@ class flusso.http.HttpRequestOptions:
   constructor public HttpRequestOptions():
     this-object:Headers         = new HashMap<String, String>().
     this-object:QueryParameters = new HashMap<String, String>().
+
+    this-object:SetHeader("Accept", "*/*").
   end constructor.
 
   /*------------------------------------------------------------------------------
@@ -38,7 +37,7 @@ class flusso.http.HttpRequestOptions:
     @return HttpRequestOptions
   ------------------------------------------------------------------------------*/
   method public HttpRequestOptions SetAccept(mimeType as char):
-    this-object:Accept = mimeType.
+    this-object:SetHeader("Accept", mimeType).
     return this-object.
   end method.
 
@@ -49,7 +48,7 @@ class flusso.http.HttpRequestOptions:
     @return HttpRequestOptions
   ------------------------------------------------------------------------------*/
   method public HttpRequestOptions SetContentType(mimeType as char):
-    this-object:ContentType = mimeType.
+    this-object:SetHeader("Content-Type", mimeType).
     return this-object.
   end method.
 
@@ -60,8 +59,8 @@ class flusso.http.HttpRequestOptions:
     @param headerValue Value
     @return HttpRequestOptions
   ------------------------------------------------------------------------------*/
-  method public HttpRequestOptions AddHeader(headerName as char, headerValue as char):
-    this-object:Headers:Add(new String(headerName), new String(headerValue)).
+  method public HttpRequestOptions SetHeader(headerName as char, headerValue as char):
+    this-object:Headers:Set(new String(headerName), new String(headerValue)).
     return this-object.
   end method.
 
