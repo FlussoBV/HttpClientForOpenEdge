@@ -13,8 +13,7 @@ block-level on error undo, throw.
 using OpenEdge.Core.String.
 using OpenEdge.Core.WidgetHandle.
 using OpenEdge.Net.HTTP.HttpHeader.
-using Progress.Collections.IIterator<Progress.Collections.KeyValuePair<String,String>>.
-using Progress.Collections.KeyValuePair<String,String>.
+using Progress.Collections.HashMapIterator.
 using Progress.Json.ObjectModel.JsonObject.
 using Progress.Json.ObjectModel.ObjectModelParser.
 using System.IO.StreamReader.
@@ -119,20 +118,22 @@ class flusso.http.DotNetHttpClient
     Purpose: GET
     Notes:
     @param url     Url
-    @param options HttpRequestOptions
+    @param options Request options
     @return HttpResponse
   ------------------------------------------------------------------------------*/
   method public HttpResponse Get(url as char, options as HttpRequestOptions):
 
-    var HttpWebRequest  request = HttpWebRequest:CreateHttp(url).
-    var HttpWebResponse webResponse.
+    var HttpWebRequest                  request.
+    var HttpWebResponse                 webResponse.
+    var HashMapIterator<String, String> iterator.
 
     var IIterator<KeyValuePair<String, String>> iterator.
+    request = HttpWebRequest:CreateHttp(url).
 
     request:Method = "GET".
 
     if valid-object(options) then do:
-      request:Accept      = options:Accept.
+      iterator = cast(options:Headers:GetIterator(), HashMapIterator<String, String>).
       request:ContentType = options:ContentType.
 
       iterator = options:Headers:GetIterator().
