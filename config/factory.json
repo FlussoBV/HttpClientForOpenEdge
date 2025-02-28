@@ -1,0 +1,3 @@
+{
+  "flusso.http.IHttpClient": "flusso.http.AppHttpClient"
+}
