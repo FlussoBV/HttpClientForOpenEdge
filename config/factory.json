@@ -1,3 +1,5 @@
 {
-  "flusso.http.IHttpClient": "flusso.http.AppHttpClient"
+  "flusso.http.IHttpClient": "flusso.http.AppHttpClient",
+  "ablclient": "flusso.http.AppHttpClient",
+  "dotnetclient": "flusso.http.DotnetHttpClient"
 }
