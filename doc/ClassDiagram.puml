@@ -1,28 +1,68 @@
 @startuml
 
 package "flusso.http" #DDDDDD {
-class           HttpResponse
-interface       IHttpClient
+class           HttpResponse {
+  + int Status 
+  + char Reason
+  + HashMap<String><String> Headers
+  + char ContentType
+  + Object Body
+}
+
+IHttpClient -left-|> HttpResponse
+
+interface       IHttpClient {
+  HttpResponse Get (url, options)
+  HttpResponse Post (url, options, body)
+  HttpResponse Patch (url, options, body)
+  HttpResponse Put (url, options, body)
+  HttpResponse Delete (url, options)
+}
+
+package parameters <<Rectangle>> {
+  skinparam groupInheritance 3
+  struct          body  <<data>>
+  class           HttpRequestOptions {
+    + char Accept
+    + char ContentType
+    + HashMap<String><String> Headers
+    + HashMap<String><String> QueryParameters
+    
+  }
+  struct          url  <<string>>
+}
+
+IHttpClient <|-- url
+IHttpClient <|-- HttpRequestOptions
+IHttpClient <|-- body
+IHttpClient <|.right. HttpClientFactory
+
+
+class           HttpClientFactory {
+  IHttpClient Get()
+}
 class           AblHttpClient  <<IHttpClient>>
 class           DotnetHttpClient  <<IHttpClient>>
-class           HttpRequestOptions
-class           url  <<string>>
-class           body  <<data>>
-class           HttpClientFactory
 
-IHttpClient <|.. AblHttpClient
-IHttpClient <|.. DotnetHttpClient
-IHttpClient <|-- url
-IHttpClient <|-- body
-IHttpClient <|-- HttpRequestOptions
-IHttpClient --|> HttpResponse
+HttpClientFactory ..|> AblHttpClient
+HttpClientFactory ..|> DotnetHttpClient
+
 }
 
 package "flusso.factory" #DDDDDD {
-interface       IFactory
-class           Factory  <<IFactory>>
-IFactory            <|.. Factory
-HttpClientFactory   <|.. IFactory
+interface       IFactory {
+  Object GetInstance(instanceName)
+  Object DeleteInstance(instanceName)
+  log Has(instanceName)
 }
+class           Factory  <<IFactory>> {
+  +void LoadDefinitions(jsonDefinitionFile)
+  -void ProcesDefinitions(jsonDefinitionFile)
+  -void AddDefinitions(id, class , singleton)
+}
+IFactory            <|.. Factory
+HttpClientFactory   <|.. IFactory 
+}
+
 @enduml
 
