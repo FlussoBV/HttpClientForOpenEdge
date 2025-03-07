@@ -11,12 +11,15 @@ using flusso.http.HttpRequestOptions.
 var character          url          = "http://httpbin.org/get".
 var IHttpClient        httpClient   = new DotNetHttpClient().
 var HttpRequestOptions options      = new HttpRequestOptions().
-var HttpResponse       httpResponse = httpClient:Get(url, options).
+var HttpResponse       httpResponse.
 var JsonObject         obj.
 var longchar           resp.
 
-  options:AddHeader("Content-Type", "text/plain")
-         :AddHeader("CustomHeader", "my custom header").
+  options:SetHeader("Content-Type", "text/plain")
+         :SetHeader("CustomHeader", "my custom header").
+
+  options:AddQueryParameter("first_query_param", "boo&bar").
+  options:AddQueryParameter("second_query_param", "foo").
 
   httpResponse = httpClient:Get(url, options).
 
@@ -24,8 +27,11 @@ var longchar           resp.
           string(cast(httpResponse:Body, JsonObject):GetJsonText())
     view-as alert-box.
 
-//  run Serialize(httpResponse, output resp).
-//  message string(resp) view-as alert-box.
+  run Serialize(httpResponse, output resp).
+  
+  copy-lob from object resp to file "C:\temp\_out.json".
+  
+  message string(resp) view-as alert-box.
 
 
 procedure Serialize:

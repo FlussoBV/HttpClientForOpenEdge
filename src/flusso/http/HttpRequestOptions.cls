@@ -72,7 +72,6 @@ class flusso.http.HttpRequestOptions:
     @return HttpRequestOptions
   ------------------------------------------------------------------------------*/
   method public HttpRequestOptions AddQueryParameter(parameterName as char, parameterValue as char):
-    parameterValue = replace(parameterValue, "&", "%26").
     this-object:QueryParameters:Add(new String(parameterName), new String(parameterValue)).
     return this-object.
   end method.

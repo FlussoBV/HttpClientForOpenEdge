@@ -12,7 +12,8 @@ block-level on error undo, throw.
 
 using OpenEdge.Core.String.
 using OpenEdge.Core.WidgetHandle.
-using OpenEdge.Net.HTTP.HttpHeader.
+using OpenEdge.Web.WebResponse.
+using Progress.Collections.HashMap.
 using Progress.Collections.HashMapIterator.
 using Progress.Json.ObjectModel.JsonObject.
 using Progress.Json.ObjectModel.ObjectModelParser.
@@ -20,6 +21,7 @@ using System.IO.StreamReader.
 using System.Net.HttpWebRequest.
 using System.Net.HttpWebResponse.
 using System.Net.WebHeaderCollection.
+using System.Net.WebUtility.
 using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
@@ -126,17 +128,16 @@ class flusso.http.DotNetHttpClient
     var HttpWebRequest                  request.
     var HttpWebResponse                 webResponse.
     var HashMapIterator<String, String> iterator.
+    var character                       requestUri.
 
-    var IIterator<KeyValuePair<String, String>> iterator.
-    request = HttpWebRequest:CreateHttp(url).
+    requestUri = this-object:GetRequestUri(url, options:QueryParameters).
+
+    request = HttpWebRequest:CreateHttp(requestUri).
 
     request:Method = "GET".
 
     if valid-object(options) then do:
       iterator = cast(options:Headers:GetIterator(), HashMapIterator<String, String>).
-      request:ContentType = options:ContentType.
-
-      iterator = options:Headers:GetIterator().
 
       do while iterator:MoveNext():
         request:Headers:Add(iterator:Current:Key:ToString(),
@@ -150,12 +151,64 @@ class flusso.http.DotNetHttpClient
 
   end method.
 
+  /*------------------------------------------------------------------------------
+    Purpose: Gets the full request url (host + query parameters)
+    Notes:
+    @param baseUrl         Base url
+    @param queryParameters Query parameters
+    @return Object
+  ------------------------------------------------------------------------------*/
+  method private character GetRequestUri(baseUrl as char, queryParameters as HashMap<String, String>):
+
+    var HashMapIterator<String, String> iterator.
+    var char requestUri.
+
+    requestUri = baseUrl.
+
+    if valid-object(queryParameters) then do:
+      requestUri = baseUrl + "?".
+
+      iterator = cast(queryParameters:GetIterator(), HashMapIterator<String, String>).
+      do while iterator:MoveNext():
+        requestUri += substitute("&1=&2",
+                                 iterator:Current:Key:ToString(),
+                                 WebUtility:UrlEncode(iterator:Current:Value:ToString()))
+                    + "&".
+      end.
+    end.
+
+    return right-trim(requestUri, "&").
+
+  end method.  // AddQueryParametersToRequest
+
+  /*------------------------------------------------------------------------------
+    Purpose: POST
+    Notes:
+    @param url     Url
+    @param data    Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Post(url as char, data as Progress.Lang.Object):
+
+    return this-object:Post(url, data, new HttpRequestOptions()).
+
   end method.
-  
+
+  /*------------------------------------------------------------------------------
+    Purpose: POST
+    Notes:
+    @param url     Url
+    @param data    Body
+    @param options Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Post(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
+
+    var HttpWebRequest  request = HttpWebRequest:CreateHttp(url).
+
+    
   end method.
-  
+
   method public HttpResponse Put(url as char, data as Progress.Lang.Object):
   end method.
   
@@ -167,5 +220,7 @@ class flusso.http.DotNetHttpClient
   
   method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
   end method.
+
+
 
 end class.
