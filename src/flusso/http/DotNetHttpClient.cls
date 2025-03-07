@@ -12,16 +12,18 @@ block-level on error undo, throw.
 
 using OpenEdge.Core.String.
 using OpenEdge.Core.WidgetHandle.
-using OpenEdge.Web.WebResponse.
 using Progress.Collections.HashMap.
 using Progress.Collections.HashMapIterator.
-using Progress.Json.ObjectModel.JsonObject.
+using Progress.Json.ObjectModel.JsonConstruct.
 using Progress.Json.ObjectModel.ObjectModelParser.
+using Progress.Lang.AppError.
 using System.IO.StreamReader.
 using System.Net.HttpWebRequest.
 using System.Net.HttpWebResponse.
 using System.Net.WebHeaderCollection.
 using System.Net.WebUtility.
+using System.Runtime.InteropServices.Marshal.
+using System.Text.Encoding.
 using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
@@ -55,7 +57,7 @@ class flusso.http.DotNetHttpClient
     // json body
     if webResponse:ContentType matches "*/json*" then do:
       jsonParser = new ObjectModelParser().
-      return cast(jsonParser:Parse(body), JsonObject).
+      return cast(jsonParser:Parse(body), JsonConstruct).
     end.
 
     // text body
@@ -105,6 +107,49 @@ class flusso.http.DotNetHttpClient
   end method.
 
   /*------------------------------------------------------------------------------
+    Purpose:
+    Notes:
+  ------------------------------------------------------------------------------*/
+  method private HttpResponse ExecuteRequest (url            as char,
+                                              requestOptions as HttpRequestOptions,
+                                              data           as Progress.Lang.Object,
+                                              method         as char):
+
+    var HttpWebRequest                  request.
+    var HttpWebResponse                 webResponse.
+    var HashMapIterator<String, String> iterator.
+    var character                       requestUri.
+    var "System.Byte[]"                 bytes.
+    var System.IO.Stream                ioStream.
+
+    requestUri = this-object:GetRequestUri(url, requestOptions:QueryParameters).
+    request    = HttpWebRequest:CreateHttp(requestUri).
+
+    request:Method = method.
+
+    if valid-object(requestOptions) then do:
+      iterator = cast(requestOptions:Headers:GetIterator(), HashMapIterator<String, String>).
+
+      do while iterator:MoveNext():
+        request:Headers:Add(iterator:Current:Key:ToString(),
+                            iterator:Current:Value:ToString()).
+      end.
+    end.
+
+    if valid-object(data) then do:
+      bytes    = this-object:GetBodyInBytes(data).
+      ioStream = request:GetRequestStream().
+      ioStream:Write(bytes, 0, bytes:Length).
+      ioStream:Close().
+    end.
+
+    webResponse = cast(request:GetResponse(), HttpWebResponse).
+
+    return this-object:ConvertResponse(webResponse).
+
+  end method.
+
+  /*------------------------------------------------------------------------------
     Purpose: GET
     Notes:
     @param url Url
@@ -112,7 +157,7 @@ class flusso.http.DotNetHttpClient
   ------------------------------------------------------------------------------*/
   method public HttpResponse Get(url as char):
 
-    return this-object:Get(url, new HttpRequestOptions()).
+    return this-object:ExecuteRequest(url, ?, ?, "GET").
 
   end method.
 
@@ -125,29 +170,64 @@ class flusso.http.DotNetHttpClient
   ------------------------------------------------------------------------------*/
   method public HttpResponse Get(url as char, options as HttpRequestOptions):
 
-    var HttpWebRequest                  request.
-    var HttpWebResponse                 webResponse.
-    var HashMapIterator<String, String> iterator.
-    var character                       requestUri.
+    return this-object:ExecuteRequest(url, options, ?, "GET").
 
-    requestUri = this-object:GetRequestUri(url, options:QueryParameters).
+  end method.  // Get
 
-    request = HttpWebRequest:CreateHttp(requestUri).
+  /*------------------------------------------------------------------------------
+    Purpose:
+    Notes:
+  ------------------------------------------------------------------------------*/
+  method public "System.Byte[]" GetBodyInBytes (data as Progress.Lang.Object):
 
-    request:Method = "GET".
+    var System.IntPtr   ptr.
+    var int             size.
+    var "System.Byte[]" bytes.
+    var memptr          mptr.
+    var longchar        dataText.
+    var handle          xmlHdl.
 
-    if valid-object(options) then do:
-      iterator = cast(options:Headers:GetIterator(), HashMapIterator<String, String>).
+    if not valid-object(data) then
+      return ?.
 
-      do while iterator:MoveNext():
-        request:Headers:Add(iterator:Current:Key:ToString(),
-                            iterator:Current:Value:ToString()).
+    case true:
+      // xml
+      when type-of(data, WidgetHandle) then do:
+        xmlHdl   = cast(data, WidgetHandle):Value.
+        // todo: encoding via x-document:encoding
+        xmlHdl:save("longchar", dataText).
+        bytes = Encoding:UTF8:GetBytes(dataText).
       end.
-    end.
 
-    webResponse = cast(request:GetResponse(), HttpWebResponse).
+      // json
+      when type-of(data, JsonConstruct) then do:
+        cast(data, JsonConstruct):Write(dataText, true, "utf-8").
+        bytes = Encoding:UTF8:GetBytes(dataText).
+      end.
 
-    return this-object:ConvertResponse(webResponse).
+      // text
+      when type-of(data, OpenEdge.Core.String) then do:
+        dataText = cast(data, OpenEdge.Core.String):Value.
+        bytes = Encoding:UTF8:GetBytes(dataText).
+      end.
+
+      // memptr
+      when type-of(data, OpenEdge.Core.Memptr) then do on error undo, throw:
+        mptr  = cast(data, OpenEdge.Core.Memptr):Value.
+        size  = get-size(mptr).
+        bytes = new "System.Byte[]"(size).
+        ptr   = new System.IntPtr(get-pointer-value(mptr)).
+        Marshal:Copy(ptr, bytes, 0, size).
+        finally:
+          delete object ptr.
+          set-size(mptr) = 0.
+        end.
+      end. // Memptr
+
+      otherwise undo, throw new AppError("Invalid body type: " + data:GetClass():TypeName).
+    end case.
+
+    return bytes.
 
   end method.
 
@@ -179,7 +259,7 @@ class flusso.http.DotNetHttpClient
 
     return right-trim(requestUri, "&").
 
-  end method.  // AddQueryParametersToRequest
+  end method.  // GetRequestUri
 
   /*------------------------------------------------------------------------------
     Purpose: POST
@@ -188,9 +268,10 @@ class flusso.http.DotNetHttpClient
     @param data    Body
     @return HttpResponse
   ------------------------------------------------------------------------------*/
-  method public HttpResponse Post(url as char, data as Progress.Lang.Object):
+  method public HttpResponse Post(url  as char,
+                                  data as Progress.Lang.Object):
 
-    return this-object:Post(url, data, new HttpRequestOptions()).
+    return this-object:ExecuteRequest(url, ?, data, "POST").
 
   end method.
 
@@ -202,12 +283,13 @@ class flusso.http.DotNetHttpClient
     @param options Request options
     @return HttpResponse
   ------------------------------------------------------------------------------*/
-  method public HttpResponse Post(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
+  method public HttpResponse Post(url            as char,
+                                  data           as Progress.Lang.Object,
+                                  requestOptions as HttpRequestOptions):
 
-    var HttpWebRequest  request = HttpWebRequest:CreateHttp(url).
+    return this-object:ExecuteRequest(url, requestOptions, data, "POST").
 
-    
-  end method.
+  end method.  // Post
 
   method public HttpResponse Put(url as char, data as Progress.Lang.Object):
   end method.
@@ -220,7 +302,5 @@ class flusso.http.DotNetHttpClient
   
   method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
   end method.
-
-
 
 end class.
