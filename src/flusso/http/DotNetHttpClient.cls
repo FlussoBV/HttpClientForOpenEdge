@@ -159,24 +159,27 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, ?, ?, "GET").
 
-  end method.
+  end method. // Get
 
   /*------------------------------------------------------------------------------
     Purpose: GET
     Notes:
-    @param url     Url
-    @param options Request options
+    @param url            Url
+    @param requestOptions Request options
     @return HttpResponse
   ------------------------------------------------------------------------------*/
-  method public HttpResponse Get(url as char, options as HttpRequestOptions):
+  method public HttpResponse Get(url            as char,
+                                 requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, options, ?, "GET").
+    return this-object:ExecuteRequest(url, requestOptions, ?, "GET").
 
-  end method.  // Get
+  end method. // Get
 
   /*------------------------------------------------------------------------------
-    Purpose:
+    Purpose: Get the body in Bytes
     Notes:
+    @param data Data
+    @return Bytes array
   ------------------------------------------------------------------------------*/
   method public "System.Byte[]" GetBodyInBytes (data as Progress.Lang.Object):
 
@@ -229,7 +232,7 @@ class flusso.http.DotNetHttpClient
 
     return bytes.
 
-  end method.
+  end method. // GetBodyInBytes
 
   /*------------------------------------------------------------------------------
     Purpose: Gets the full request url (host + query parameters)
@@ -238,7 +241,8 @@ class flusso.http.DotNetHttpClient
     @param queryParameters Query parameters
     @return Object
   ------------------------------------------------------------------------------*/
-  method private character GetRequestUri(baseUrl as char, queryParameters as HashMap<String, String>):
+  method private character GetRequestUri (baseUrl as char,
+                                          queryParameters as HashMap<String, String>):
 
     var HashMapIterator<String, String> iterator.
     var char requestUri.
@@ -259,13 +263,13 @@ class flusso.http.DotNetHttpClient
 
     return right-trim(requestUri, "&").
 
-  end method.  // GetRequestUri
+  end method. // GetRequestUri
 
   /*------------------------------------------------------------------------------
     Purpose: POST
     Notes:
-    @param url     Url
-    @param data    Body
+    @param url  Url
+    @param data Body
     @return HttpResponse
   ------------------------------------------------------------------------------*/
   method public HttpResponse Post(url  as char,
@@ -273,14 +277,14 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, ?, data, "POST").
 
-  end method.
+  end method. // Post
 
   /*------------------------------------------------------------------------------
     Purpose: POST
     Notes:
-    @param url     Url
-    @param data    Body
-    @param options Request options
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
     @return HttpResponse
   ------------------------------------------------------------------------------*/
   method public HttpResponse Post(url            as char,
@@ -289,18 +293,66 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, requestOptions, data, "POST").
 
-  end method.  // Post
+  end method. // Post
 
-  method public HttpResponse Put(url as char, data as Progress.Lang.Object):
+  /*------------------------------------------------------------------------------
+    Purpose: PUT
+    Notes:
+    @param url  Url
+    @param data Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
+  method public HttpResponse Put(url  as char,
+                                 data as Progress.Lang.Object):
+
+    return this-object:ExecuteRequest(url, ?, data, "PUT").
+
   end method.
-  
-  method public HttpResponse Put(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
+
+  /*------------------------------------------------------------------------------
+    Purpose: PUT
+    Notes:
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
+  method public HttpResponse Put (url            as char,
+                                  data           as Progress.Lang.Object,
+                                  requestOptions as HttpRequestOptions):
+
+    return this-object:ExecuteRequest(url, requestOptions, data, "PUT").
+
   end method.
-  
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object):
+
+  /*------------------------------------------------------------------------------
+    Purpose: DELETE
+    Notes:
+    @param url  Url
+    @param data Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
+  method public HttpResponse Delete(url  as char,
+                                    data as Progress.Lang.Object):
+
+    return this-object:ExecuteRequest(url, ?, data, "DELETE").
+
   end method.
-  
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
+
+  /*------------------------------------------------------------------------------
+    Purpose: DELETE
+    Notes:
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
+  method public HttpResponse Delete(url            as char,
+                                    data           as Progress.Lang.Object,
+                                    requestOptions as HttpRequestOptions):
+
+    return this-object:ExecuteRequest(url, requestOptions, data, "DELETE").
+
   end method.
 
 end class.

@@ -1,17 +1,18 @@
 block-level on error undo, throw.
 
+using OpenEdge.Core.WidgetHandle.
 using Progress.IO.JsonSerializer.
 using Progress.IO.MemoryOutputStream.
 using Progress.Json.ObjectModel.JsonObject.
 using flusso.http.DotNetHttpClient.
+using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
-using flusso.http.HttpRequestOptions.
-using OpenEdge.Core.String.
-using OpenEdge.Core.WidgetHandle.
 
-var character          url          = "http://httpbin.org/post".
+var character          postPutOrDel = "delete".
+var character          url          = "http://httpbin.org/" + postPutOrDel.
 var IHttpClient        httpClient   = new DotNetHttpClient().
+//var IHttpClient        httpClient   = new AblHttpClient().
 var HttpRequestOptions options      = new HttpRequestOptions().
 var HttpResponse       httpResponse.
 var JsonObject         objBody.
@@ -35,13 +36,17 @@ objBody:Add("second_payload_body_param", true).
          :SetHeader("CustomHeader", "my custom header").
 
   // json:
-  httpResponse = httpClient:Post(url, objBody, options).
+  if postPutOrDel eq "post"
+  then httpResponse = httpClient:Post(url, objBody, options).
+  if postPutOrDel eq "delete"
+  then httpResponse = httpClient:Delete(url, objBody, options).
+  else httpResponse = httpClient:Put(url, objBody, options).
   // xml:
   //httpResponse = httpClient:Post(url, xmlBody, options).
   // text:
   //httpResponse = httpClient:Post(url, new String("foo, bar"), options).
 
-  message "Response:" skip(1)
+  message "Response:" httpResponse:Status skip(1)
           string(cast(httpResponse:Body, JsonObject):GetJsonText())
     view-as alert-box.
 
