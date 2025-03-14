@@ -21,7 +21,7 @@ interface       IHttpClient {
 
 package parameters <<Rectangle>> {
   skinparam groupInheritance 3
-  struct          body  <<data>>
+  struct          url  <<string>>
   class           HttpRequestOptions {
     + char Accept
     + char ContentType
@@ -29,7 +29,7 @@ package parameters <<Rectangle>> {
     + HashMap<String><String> QueryParameters
     
   }
-  struct          url  <<string>>
+  struct          body  <<data>>
 }
 
 IHttpClient <|-- url
