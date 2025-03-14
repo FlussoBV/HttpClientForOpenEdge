@@ -39,6 +39,7 @@ class flusso.http.DotNetHttpClient
   ------------------------------------------------------------------------------*/
   method protected Progress.Lang.Object ConvertBody (webResponse as HttpWebResponse):
 
+    // GetResponseStream returns the result body of the the Response
     var StreamReader      streamReader = new StreamReader(webResponse:GetResponseStream()).
     var ObjectModelParser jsonParser.
 
@@ -159,7 +160,7 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, ?, ?, "GET").
 
-  end method. // Get
+  end method.
 
   /*------------------------------------------------------------------------------
     Purpose: GET
@@ -173,7 +174,7 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, requestOptions, ?, "GET").
 
-  end method. // Get
+  end method.
 
   /*------------------------------------------------------------------------------
     Purpose: Get the body in Bytes
@@ -232,7 +233,7 @@ class flusso.http.DotNetHttpClient
 
     return bytes.
 
-  end method. // GetBodyInBytes
+  end method.
 
   /*------------------------------------------------------------------------------
     Purpose: Gets the full request url (host + query parameters)
@@ -263,7 +264,7 @@ class flusso.http.DotNetHttpClient
 
     return right-trim(requestUri, "&").
 
-  end method. // GetRequestUri
+  end method.
 
   /*------------------------------------------------------------------------------
     Purpose: POST
@@ -277,7 +278,7 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, ?, data, "POST").
 
-  end method. // Post
+  end method.
 
   /*------------------------------------------------------------------------------
     Purpose: POST
@@ -293,7 +294,7 @@ class flusso.http.DotNetHttpClient
 
     return this-object:ExecuteRequest(url, requestOptions, data, "POST").
 
-  end method. // Post
+  end method.
 
   /*------------------------------------------------------------------------------
     Purpose: PUT
