@@ -40,7 +40,7 @@ class flusso.http.AblHttpClient implements IHttpClient:
   end constructor.
   
   method public HttpResponse Get(url as char): 
-    return Get(url, ?).
+    return this-object:Get(url, ?).
   end method.  // Get
 
   method public HttpResponse Get(url as char, options as HttpRequestOptions): 
@@ -130,12 +130,6 @@ class flusso.http.AblHttpClient implements IHttpClient:
   method private void AddHeadersToRequest(builder as RequestBuilder, options as HttpRequestOptions):
 
     var HashMapIterator<String, String> iterator.
-
-    if options:Accept > "" then 
-      builder:AddHeader("Accept", options:Accept).
-    
-    if options:ContentType > "" then
-      builder:AddHeader("Content-Type", options:ContentType).
 
     iterator = cast(options:Headers:GetIterator(), HashMapIterator<String, String>).
     do while iterator:MoveNext():
