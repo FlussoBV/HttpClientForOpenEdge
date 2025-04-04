@@ -1,6 +1,6 @@
 
 /*------------------------------------------------------------------------
-    File        : IAppHttpClient
+    File        : IHttpClient
     Purpose     : 
     Syntax      : 
     Author(s)   : bronco / Flusso B.V.

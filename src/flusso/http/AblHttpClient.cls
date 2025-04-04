@@ -1,8 +1,8 @@
 
  /*------------------------------------------------------------------------
-    File        : AppHttpClient
-    Purpose     : 
-    Syntax      : 
+    File        : AblHttpClient
+    Purpose     :
+    Syntax      :
     Author(s)   : bronco / Flusso B.V.
     Created     : Thu Jan 23 12:36:36 +01:00 2025
     Notes       : Copyright (c) 2025 Flusso B.V. (MIT license, see attached LICENSE file)
@@ -36,14 +36,14 @@ class flusso.http.AblHttpClient implements IHttpClient:
                                :SetSSLProtocols(protocols)
                                //:SetSSLCiphers(ciphers)
                                :Library.
-    
+
   end constructor.
-  
-  method public HttpResponse Get(url as char): 
+
+  method public HttpResponse Get(url as char):
     return this-object:Get(url, ?).
   end method.  // Get
 
-  method public HttpResponse Get(url as char, options as HttpRequestOptions): 
+  method public HttpResponse Get(url as char, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Get(url).
     return ExecuteRequest(builder, options).
   end method.  // Get
@@ -52,7 +52,7 @@ class flusso.http.AblHttpClient implements IHttpClient:
     return Post(url, data, ?).
   end method.  // Post
 
-  method public HttpResponse Post(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
+  method public HttpResponse Post(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Post(url, data).
     return ExecuteRequest(builder, options).
   end method.  // Post
@@ -61,7 +61,7 @@ class flusso.http.AblHttpClient implements IHttpClient:
     return this-object:Put(url, data, ?).
   end method.  // Put
 
-  method public HttpResponse Put(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
+  method public HttpResponse Put(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Put(url, data).
     return ExecuteRequest(builder, options).
   end method.  // Put
@@ -70,18 +70,18 @@ class flusso.http.AblHttpClient implements IHttpClient:
     return this-object:Delete(url, data, ?).
   end method.  // Delete
 
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
+  method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Put(url, data).
     return ExecuteRequest(builder, options).
   end method.  // Delete
 
   method private HttpResponse ExecuteRequest(builder as RequestBuilder, options as HttpRequestOptions):
-    
+
     var IHttpRequest request.
     var IHttpResponse oeResponse.
     var HttpResponse response.
     var OpenEdge.Net.HTTP.IHttpClient client.
-    
+
     response = new HttpResponse().
 
     builder = this-object:ApplyOptions(builder, options).
@@ -111,12 +111,12 @@ class flusso.http.AblHttpClient implements IHttpClient:
       end catch.
 
     end.  // do on error...
-      
+
     return response.
 
   end method.  // ExecuteRequest
 
-  method private RequestBuilder ApplyOptions(builder as RequestBuilder, options as HttpRequestOptions): 
+  method private RequestBuilder ApplyOptions(builder as RequestBuilder, options as HttpRequestOptions):
 
     if not valid-object(options) then
       return builder.
@@ -137,7 +137,7 @@ class flusso.http.AblHttpClient implements IHttpClient:
     end.
 
   end method.  // AddHeadersToRequest
-  
+
   method private void AddQueryParametersToRequest(request as IHttpRequest, queryParameters as HashMap<String, String>):
 
     var HashMapIterator<String, String> iterator.
@@ -158,7 +158,7 @@ class flusso.http.AblHttpClient implements IHttpClient:
     do i = 1 to extent(oeHeaders):
       headers:Add(new String(oeHeaders[i]:Name), new String(oeHeaders[i]:Value)).
     end.  // do i = 1 to...
-    
+
     //oeResponse:
     return headers.
 
