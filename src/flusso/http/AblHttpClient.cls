@@ -10,25 +10,29 @@
 
 block-level on error undo, throw.
 
-using flusso.http.IHttpClient.
-using flusso.http.HttpRequestOptions.
-using flusso.http.HttpResponse.
+using OpenEdge.Core.String.
 using OpenEdge.Net.HTTP.ClientBuilder.
+using OpenEdge.Net.HTTP.HttpHeader.
 using OpenEdge.Net.HTTP.IHttpClientLibrary.
 using OpenEdge.Net.HTTP.IHttpRequest.
 using OpenEdge.Net.HTTP.IHttpResponse.
-using OpenEdge.Net.HTTP.HttpHeader.
-using OpenEdge.Net.HTTP.RequestBuilder.
 using OpenEdge.Net.HTTP.Lib.ClientLibraryBuilder.
-using OpenEdge.Core.String.
+using OpenEdge.Net.HTTP.RequestBuilder.
 using Progress.Collections.HashMap.
 using Progress.Collections.HashMapIterator.
+using flusso.http.HttpRequestOptions.
+using flusso.http.HttpResponse.
+using flusso.http.IHttpClient.
 
 class flusso.http.AblHttpClient implements IHttpClient:
 
   var private IHttpClientLibrary httpClientLibrary.
-  var char[] protocols = ["TLSv1.2"].
+  var private char[] protocols = ["TLSv1.2"].
 
+  /*------------------------------------------------------------------------------
+    Purpose: Constructor
+    Notes:
+  ------------------------------------------------------------------------------*/
   constructor public AblHttpClient():
 
     httpClientLibrary = ClientLibraryBuilder
@@ -39,42 +43,107 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
   end constructor.
 
+  /*------------------------------------------------------------------------------
+    Purpose: GET
+    Notes:
+    @param url Url
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Get(url as char):
     return this-object:Get(url, ?).
   end method.  // Get
 
+  /*------------------------------------------------------------------------------
+    Purpose: GET
+    Notes:
+    @param url            Url
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Get(url as char, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Get(url).
     return ExecuteRequest(builder, options).
   end method.  // Get
 
+  /*------------------------------------------------------------------------------
+    Purpose: POST
+    Notes:
+    @param url  Url
+    @param data Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Post(url as char, data as Progress.Lang.Object):
     return Post(url, data, ?).
   end method.  // Post
 
+  /*------------------------------------------------------------------------------
+    Purpose: POST
+    Notes:
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Post(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Post(url, data).
     return ExecuteRequest(builder, options).
   end method.  // Post
 
+  /*------------------------------------------------------------------------------
+    Purpose: PUT
+    Notes:
+    @param url  Url
+    @param data Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Put(url as char, data as Progress.Lang.Object):
     return this-object:Put(url, data, ?).
   end method.  // Put
 
+  /*------------------------------------------------------------------------------
+    Purpose: PUT
+    Notes:
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Put(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Put(url, data).
     return ExecuteRequest(builder, options).
   end method.  // Put
 
+  /*------------------------------------------------------------------------------
+    Purpose: DELETE
+    Notes:
+    @param url  Url
+    @param data Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Delete(url as char, data as Progress.Lang.Object):
     return this-object:Delete(url, data, ?).
   end method.  // Delete
 
+  /*------------------------------------------------------------------------------
+    Purpose: DELETE
+    Notes:
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions):
     var RequestBuilder builder = RequestBuilder:Put(url, data).
     return ExecuteRequest(builder, options).
   end method.  // Delete
 
+  /*------------------------------------------------------------------------------
+    Purpose: Execute the request
+    Notes:
+    @param builder Request builder object
+    @param options Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
   method private HttpResponse ExecuteRequest(builder as RequestBuilder, options as HttpRequestOptions):
 
     var IHttpRequest request.
@@ -84,7 +153,7 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
     response = new HttpResponse().
 
-    builder = this-object:ApplyOptions(builder, options).
+    this-object:ApplyOptions(builder, options).
 
     request = builder:Request.
     if options?:QueryParameters:Count > 0 then
@@ -116,20 +185,33 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
   end method.  // ExecuteRequest
 
-  method private RequestBuilder ApplyOptions(builder as RequestBuilder, options as HttpRequestOptions):
+  /*------------------------------------------------------------------------------
+    Purpose: Add options to the request builder
+    Notes:
+    @param builder Request builder object
+    @param options Request options
+  ------------------------------------------------------------------------------*/
+  method private void ApplyOptions(builder as RequestBuilder, options as HttpRequestOptions):
 
     if not valid-object(options) then
-      return builder.
+      return.
 
     AddHeadersToRequest(builder, options).
 
-    return builder.
-
   end method.  // ApplyOptions
 
+  /*------------------------------------------------------------------------------
+    Purpose: Add headers to the request builder
+    Notes:
+    @param builder Request builder object
+    @param options Request options
+  ------------------------------------------------------------------------------*/
   method private void AddHeadersToRequest(builder as RequestBuilder, options as HttpRequestOptions):
 
     var HashMapIterator<String, String> iterator.
+
+    if not valid-object(options) then
+      return.
 
     iterator = cast(options:Headers:GetIterator(), HashMapIterator<String, String>).
     do while iterator:MoveNext():
@@ -138,6 +220,12 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
   end method.  // AddHeadersToRequest
 
+  /*------------------------------------------------------------------------------
+    Purpose: Add headers to the request builder
+    Notes:
+    @param builder Request builder object
+    @param options Request options
+  ------------------------------------------------------------------------------*/
   method private void AddQueryParametersToRequest(request as IHttpRequest, queryParameters as HashMap<String, String>):
 
     var HashMapIterator<String, String> iterator.
@@ -149,6 +237,12 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
   end method.  // AddQueryParametersToRequest
 
+  /*------------------------------------------------------------------------------
+    Purpose: Get headers
+    Notes:
+    @param oeResponse OE response object
+    @return HashMap of the headers
+  ------------------------------------------------------------------------------*/
   method private HashMap<String, String> GetHeaders(oeResponse as IHttpResponse):
     var HashMap<String, String> headers = new HashMap<String, String>().
     var HttpHeader[] oeHeaders.
@@ -164,4 +258,4 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
   end method.  // GetHeaders
 
-end class.  // AppHttpClient
+end class.  // AblHttpClient

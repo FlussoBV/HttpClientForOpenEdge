@@ -32,6 +32,28 @@ class flusso.http.DotNetHttpClient
   implements IHttpClient:
 
   /*------------------------------------------------------------------------------
+    Purpose: Add headers to the request
+    Notes:
+    @param request Http web request
+    @param requestOptions Request options
+  ------------------------------------------------------------------------------*/
+  method private void AddHeadersToRequest(request as HttpWebRequest, requestOptions as HttpRequestOptions):
+
+    var HashMapIterator<String, String> iterator.
+
+    if not valid-object(requestOptions) then
+      return.
+
+    iterator = cast(requestOptions:Headers:GetIterator(), HashMapIterator<String, String>).
+
+    do while iterator:MoveNext():
+      request:Headers:Add(iterator:Current:Key:ToString(),
+                          iterator:Current:Value:ToString()).
+    end.
+
+  end method.  // AddHeadersToRequest
+
+  /*------------------------------------------------------------------------------
     Purpose: converts a .NET body to an Object
     Notes:
     @param webResponse HttpWebResponse
@@ -108,34 +130,30 @@ class flusso.http.DotNetHttpClient
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose:
+    Purpose: Execute the request
     Notes:
+    @param url Url
+    @param data Body
+    @param requestOptions Request options
+    @return HttpResponse
   ------------------------------------------------------------------------------*/
   method private HttpResponse ExecuteRequest (url            as char,
-                                              requestOptions as HttpRequestOptions,
                                               data           as Progress.Lang.Object,
+                                              requestOptions as HttpRequestOptions,
                                               method         as char):
 
-    var HttpWebRequest                  request.
-    var HttpWebResponse                 webResponse.
-    var HashMapIterator<String, String> iterator.
-    var character                       requestUri.
-    var "System.Byte[]"                 bytes.
-    var System.IO.Stream                ioStream.
+    var character        requestUri.
+    var HttpWebRequest   request.
+    var "System.Byte[]"  bytes.
+    var System.IO.Stream ioStream.
+    var HttpWebResponse  webResponse.
 
     requestUri = this-object:GetRequestUri(url, requestOptions:QueryParameters).
     request    = HttpWebRequest:CreateHttp(requestUri).
 
     request:Method = method.
 
-    if valid-object(requestOptions) then do:
-      iterator = cast(requestOptions:Headers:GetIterator(), HashMapIterator<String, String>).
-
-      do while iterator:MoveNext():
-        request:Headers:Add(iterator:Current:Key:ToString(),
-                            iterator:Current:Value:ToString()).
-      end.
-    end.
+    this-object:AddHeadersToRequest(request, requestOptions).
 
     if valid-object(data) then do:
       bytes    = this-object:GetBodyInBytes(data).
@@ -172,7 +190,7 @@ class flusso.http.DotNetHttpClient
   method public HttpResponse Get(url            as char,
                                  requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, requestOptions, ?, "GET").
+    return this-object:ExecuteRequest(url, ?, requestOptions, "GET").
 
   end method.
 
@@ -276,7 +294,7 @@ class flusso.http.DotNetHttpClient
   method public HttpResponse Post(url  as char,
                                   data as Progress.Lang.Object):
 
-    return this-object:ExecuteRequest(url, ?, data, "POST").
+    return this-object:ExecuteRequest(url, data, ?, "POST").
 
   end method.
 
@@ -292,7 +310,7 @@ class flusso.http.DotNetHttpClient
                                   data           as Progress.Lang.Object,
                                   requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, requestOptions, data, "POST").
+    return this-object:ExecuteRequest(url, data, requestOptions, "POST").
 
   end method.
 
@@ -306,7 +324,7 @@ class flusso.http.DotNetHttpClient
   method public HttpResponse Put(url  as char,
                                  data as Progress.Lang.Object):
 
-    return this-object:ExecuteRequest(url, ?, data, "PUT").
+    return this-object:ExecuteRequest(url, data, ?, "PUT").
 
   end method.
 
@@ -322,7 +340,7 @@ class flusso.http.DotNetHttpClient
                                   data           as Progress.Lang.Object,
                                   requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, requestOptions, data, "PUT").
+    return this-object:ExecuteRequest(url, data, requestOptions, "PUT").
 
   end method.
 
@@ -336,7 +354,7 @@ class flusso.http.DotNetHttpClient
   method public HttpResponse Delete(url  as char,
                                     data as Progress.Lang.Object):
 
-    return this-object:ExecuteRequest(url, ?, data, "DELETE").
+    return this-object:ExecuteRequest(url, data, ?, "DELETE").
 
   end method.
 
@@ -352,7 +370,7 @@ class flusso.http.DotNetHttpClient
                                     data           as Progress.Lang.Object,
                                     requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, requestOptions, data, "DELETE").
+    return this-object:ExecuteRequest(url, data, requestOptions, "DELETE").
 
   end method.
 
