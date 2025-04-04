@@ -10,6 +10,8 @@
 
 block-level on error undo, throw.
 
+using flusso.factory.Factory.
+using flusso.factory.IConfigurable.
 using flusso.factory.IFactory.
 using Progress.Json.ObjectModel.JsonObject.
 using Progress.Json.ObjectModel.ObjectModelParser.
@@ -18,13 +20,14 @@ using Progress.Lang.AppError.
 class flusso.factory.Factory implements IFactory:
   	
   define private temp-table ttdefintion no-undo
-    field indentifier as character
-    field classname   as character
-    field singleton   as logical
+    field indentifier as char
+    field classname as char
+    field singleton as logical
+    field config as Progress.Lang.Object
     .
 
   define private temp-table ttinstance no-undo
-    field objtype as character
+    field objtype as char
     field obj as Progress.Lang.Object
     .
 
@@ -39,7 +42,7 @@ class flusso.factory.Factory implements IFactory:
   * @param instanceName   the logical name of the requested object
   * @return               the requested object instance
   */  
-  method public Progress.Lang.Object GetInstance(instanceName as character):
+  method public Progress.Lang.Object GetInstance(instanceName as char):
         
     var Progress.Lang.Object instanceRef.
     var logical singleInstanceFound.
@@ -56,10 +59,14 @@ class flusso.factory.Factory implements IFactory:
       end.    
     end. 
     
-    if not valid-object(instanceRef) then
+    if not valid-object(instanceRef) then do:
       instanceRef = dynamic-new(ttdefintion.classname)() no-error.
+            
+      if not error-status:error and instanceRef:GetClass():IsA("flusso.factory.IConfigurable") and valid-object(ttdefintion.config) then
+        cast(instanceRef, IConfigurable):Configure(cast(ttdefintion.config, JsonObject)).
+    end.              
                   
-    if (not valid-object(instanceRef)) then 
+    if not valid-object(instanceRef) then 
       undo, throw new AppError(substitute("class not found: &1", ttdefintion.classname), -1).
             
     if ttdefintion.singleton and not singleInstanceFound then do:
@@ -82,7 +89,7 @@ class flusso.factory.Factory implements IFactory:
     return can-find(first ttdefintion where ttdefintion.indentifier = instanceName).
   end method.  // Has
 
-  method public void LoadDefinitions(jsonDefinitionFile as character):
+  method public Factory LoadDefinitions(jsonDefinitionFile as char):
         
     var JsonObject jsonDefinitions.
     var ObjectModelParser parser.
@@ -104,7 +111,9 @@ class flusso.factory.Factory implements IFactory:
       end catch.
       
     end.  // do on error...
-                   
+    
+    return this-object.
+    
   end method.  // LoadDefinitions
   
   
@@ -112,7 +121,7 @@ class flusso.factory.Factory implements IFactory:
 
     var int i, propertyType.
     var char[] names.
-    var JsonObject defintionObject.
+    var JsonObject defintionObject, config.
     var char identifier, classname.
     var logical singleton.
         
@@ -134,6 +143,8 @@ class flusso.factory.Factory implements IFactory:
           defintionObject = jsonDefintions:GetJsonObject(identifier).
           classname = defintionObject:GetCharacter("class").
           singleton = (defintionObject:Has("singleton") and defintionObject:GetLogical("singleton")).  
+          if defintionObject:Has("config") then
+            config = defintionObject:GetJsonObject("config").
         end.
                 
         otherwise do:
@@ -142,22 +153,23 @@ class flusso.factory.Factory implements IFactory:
              
       end case.
       
-      AddDefinition(identifier, classname, singleton).
+      AddDefinition(identifier, classname, singleton, config).
         
     end.  // do i = 1 to extent(names)...
 
   end method.  // LoadDefinitions
 
-  method private void AddDefinition(identifier as char, classname as char, singleton as logical):
+  method private void AddDefinition(identifier as char, classname as char, singleton as logical, config as JsonObject):
     
     find ttdefintion where ttdefintion.indentifier = identifier no-error.
-    if (not available(ttdefintion)) then do:
+    if not available(ttdefintion) then do:
       create ttdefintion.
       ttdefintion.indentifier = identifier.
     end.
     
     ttdefintion.classname = classname.
-    ttdefintion.singleton = singleton.  
+    ttdefintion.singleton = singleton. 
+    ttdefintion.config = config.
 
   end method.  // AddDefinitions
 

@@ -41,10 +41,41 @@ var IFactory factory = new Factory().
 factory:LoadDefintions("another-factory.json").
 ```
 
-Note: `LoadDefintions` can be called multiple times. Already existing identifier wqill be overwritten. In other words, if one load two json factory JSON file with a defintion for `IHttpClient`, the last one wins.
+Note: `LoadDefintions` can be called multiple times. Already existing identifier will be overwritten. In other words, if one loads two json factory JSON files with a defintion for `IHttpClient`, the last one wins.
 
 ## singletons
 It's possible to define a factory as a singletion, so that max 1 instance ins created and that one is re-used in subsequent `GetInstance` calls. In this case the JSON definition line should look like:
 ```
 { "session-manager": "{ "class": "lib.core.SessionManager", "singleton": true}
 ```
+
+## inject configuration
+It is possible to inject configuration into the instantiated object. For this the target class needs to implement the `flusso.factory.IConfigurable` interface. The object defined in the `config` property is passed in its entirety to the `Configure` (as defined in the `IConfigurable` interface).
+
+```
+{
+  "googleclient": { 
+    "class": "my.custom.HttpClient",
+    "config": {
+      "url": "https://www.google.nl"
+    }
+  }
+}
+```
+
+```
+class my.custom.HttpClient implements IConfigurable:
+  
+  var private char urlToCall.
+  
+  method public void Configure(config as JsonObject):
+    if config:Has("url") then
+      urlToCall = config:GetCharacter("url").  
+  end.
+
+end class.
+```
+
+
+
+
