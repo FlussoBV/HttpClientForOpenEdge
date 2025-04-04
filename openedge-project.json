@@ -7,6 +7,7 @@
     "extraParameters": "-clrnetcore",
     "buildPath": [
         { "type": "source", "path": "src" },
+        { "type": "propath", "path": "bin" },
         { "type": "propath", "path": "src" },
         { "type": "propath", "path": "${DLC}/tty/OpenEdge.Core.pl" },
         { "type": "propath", "path": "${DLC}/tty/netlib/OpenEdge.Net.pl" },

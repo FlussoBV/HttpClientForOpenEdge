@@ -1,6 +1,7 @@
 
 .builder/
 .vscode/
+.history/
 artifacts/
 bin/
 build/
