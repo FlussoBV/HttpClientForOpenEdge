@@ -10,7 +10,7 @@ tmp/
 workspace/
 
 *.r
+**/.DS_Store
+docker/._*
 
 license/progress.cfg
-
-

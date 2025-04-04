@@ -27,12 +27,12 @@ var longchar           resp.
           string(cast(httpResponse:Body, JsonObject):GetJsonText())
     view-as alert-box.
 
-  run Serialize(httpResponse, output resp).
-  
-  copy-lob from object resp to file "C:\temp\_out.json".
-  
-  message string(resp) view-as alert-box.
 
+/*  run Serialize(httpResponse, output resp).             */
+/*                                                        */
+/*  copy-lob from object resp to file "C:\temp\_out.json".*/
+/*                                                        */
+/*  message string(resp) view-as alert-box.               */
 
 procedure Serialize:
   define input  parameter obj  as Progress.Lang.Object no-undo.
