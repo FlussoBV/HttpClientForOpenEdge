@@ -23,20 +23,38 @@ class flusso.http.HttpClientFactory:
   var private HashMap<String, IHttpClient> clients.
   var private IFactory factory.
 
+  /*------------------------------------------------------------------------------
+    Purpose: Static constructor
+    Notes:
+  ------------------------------------------------------------------------------*/
   constructor static HttpClientFactory():
     instance = new HttpClientFactory().
     instance:clients = new HashMap<String, IHttpClient>().
   end constructor.
 
-  constructor public HttpClientFactory():
+  /*------------------------------------------------------------------------------
+    Purpose: Constructor
+    Notes:
+  ------------------------------------------------------------------------------*/
+  constructor private HttpClientFactory():
     factory = new Factory("factory.json").
   end constructor.
 
-  // return a new instance of AppHttpClient
+  /*------------------------------------------------------------------------------
+    Purpose: Return a new instance of IHttpClient
+    Notes:
+    @return IHttpClient
+  ------------------------------------------------------------------------------*/
   method public static IHttpClient Get():
     return cast(instance:factory:GetInstance("flusso.http.IHttpClient"), IHttpClient).
   end method.  // Get
 
+  /*------------------------------------------------------------------------------
+    Purpose: Get instance of IHttpClient
+    Notes:
+    @param clientName Name as identifier
+    @return IHttpClient
+  ------------------------------------------------------------------------------*/
   method public static IHttpClient Get(clientName as char):
 
     // design choice for now is to have a single instance of each client
@@ -53,7 +71,13 @@ class flusso.http.HttpClientFactory:
     return client.
 
   end method.  // Get
-  
+
+  /*------------------------------------------------------------------------------
+    Purpose: Remove an instance of IHttpClient
+    Notes:
+    @param clientName Name as identifier
+    @return true/false
+  ------------------------------------------------------------------------------*/
   method public static logical Remove(clientName as char):
     return instance:clients:Remove(new String(clientName)).
   end method.

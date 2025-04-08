@@ -31,17 +31,29 @@ class flusso.factory.Factory implements IFactory:
     field obj as Progress.Lang.Object
     .
 
+  /*------------------------------------------------------------------------------
+    Purpose: Constructor
+    Notes:
+  ------------------------------------------------------------------------------*/
   constructor public Factory():
+    // noop
   end constructor.
 
+  /*------------------------------------------------------------------------------
+    Purpose: Constructor
+    Notes:
+    @param jsonDefinitionFile Definition file
+  ------------------------------------------------------------------------------*/
   constructor public Factory(jsonDefinitionFile as char):
     LoadDefinitions(jsonDefinitionFile).  
   end constructor.
 
-  /**
-  * @param instanceName   the logical name of the requested object
-  * @return               the requested object instance
-  */  
+  /*------------------------------------------------------------------------------
+    Purpose: GetInstance
+    Notes:
+    @param instanceName The logical name of the requested object
+    @return The requested object instance
+  ------------------------------------------------------------------------------*/
   method public Progress.Lang.Object GetInstance(instanceName as char):
         
     var Progress.Lang.Object instanceRef.
@@ -61,11 +73,13 @@ class flusso.factory.Factory implements IFactory:
     
     if not valid-object(instanceRef) then do:
       instanceRef = dynamic-new(ttdefintion.classname)() no-error.
-            
-      if not error-status:error and instanceRef:GetClass():IsA("flusso.factory.IConfigurable") and valid-object(ttdefintion.config) then
+
+      if     not error-status:error
+         and type-of(instanceRef, IConfigurable)
+         and valid-object(ttdefintion.config) then
         cast(instanceRef, IConfigurable):Configure(cast(ttdefintion.config, JsonObject)).
-    end.              
-                  
+    end.
+
     if not valid-object(instanceRef) then 
       undo, throw new AppError(substitute("class not found: &1", ttdefintion.classname), -1).
             
@@ -81,14 +95,29 @@ class flusso.factory.Factory implements IFactory:
               
   end method.  // GetInstance
 
-  method public Progress.Lang.Object DeleteInstance(instanceName as char):
-    
+  /*------------------------------------------------------------------------------
+    Purpose: DeleteInstance
+    Notes:
+    @param instanceName The logical name of the requested object to delete
+  ------------------------------------------------------------------------------*/
+  method public void DeleteInstance(instanceName as char):
+    // tbd
   end method.  // DeleteInstance
 
+  /*------------------------------------------------------------------------------
+    Purpose: Has instance
+    Notes:
+    @param instanceName The logical name of the requested object to delete
+  ------------------------------------------------------------------------------*/
   method public logical Has(instanceName as char):
     return can-find(first ttdefintion where ttdefintion.indentifier = instanceName).
   end method.  // Has
 
+  /*------------------------------------------------------------------------------
+    Purpose: Load definitions
+    Notes:
+    @param jsonDefinitionFile Definition file
+  ------------------------------------------------------------------------------*/
   method public Factory LoadDefinitions(jsonDefinitionFile as char):
         
     var JsonObject jsonDefinitions.
@@ -96,18 +125,17 @@ class flusso.factory.Factory implements IFactory:
     
     do on error undo, throw:
       
-      jsonDefinitionFile = search(jsonDefinitionFile).
-      if jsonDefinitionFile = ? then 
+      if search(jsonDefinitionFile) = ? then 
         undo, throw new AppError(substitute("factory definition file (&1) not found", jsonDefinitionFile), -1).
 
       parser = new ObjectModelParser().
           
-      jsonDefinitions = cast(parser:ParseFile(jsonDefinitionFile), JsonObject).
+      jsonDefinitions = cast(parser:ParseFile(search(jsonDefinitionFile)), JsonObject).
 
       this-object:ProcessDefinitions(jsonDefinitions).
 
-      catch err1 as Progress.Lang.Error :
-        undo, throw new AppError(substitute("Invalid data: &1", err1:GetMessage(1)), -1).  
+      catch err as Progress.Lang.Error :
+        undo, throw new AppError(substitute("Invalid data: &1", err:GetMessage(1)), -1).  
       end catch.
       
     end.  // do on error...
@@ -116,7 +144,11 @@ class flusso.factory.Factory implements IFactory:
     
   end method.  // LoadDefinitions
   
-  
+  /*------------------------------------------------------------------------------
+    Purpose: Process definitions
+    Notes:
+    @param jsonDefintions Definition as json
+  ------------------------------------------------------------------------------*/
   method private void ProcessDefinitions(jsonDefintions as JsonObject):
 
     var int i, propertyType.
@@ -124,8 +156,7 @@ class flusso.factory.Factory implements IFactory:
     var JsonObject defintionObject, config.
     var char identifier, classname.
     var logical singleton.
-        
-            
+
     names = jsonDefintions:GetNames().
     do i = 1 to extent(names):
             
@@ -157,8 +188,16 @@ class flusso.factory.Factory implements IFactory:
         
     end.  // do i = 1 to extent(names)...
 
-  end method.  // LoadDefinitions
+  end method.  // ProcessDefinitions
 
+  /*------------------------------------------------------------------------------
+    Purpose: Add definition
+    Notes:
+    @param identifier
+    @param classname
+    @param singleton
+    @param config
+  ------------------------------------------------------------------------------*/
   method private void AddDefinition(identifier as char, classname as char, singleton as logical, config as JsonObject):
     
     find ttdefintion where ttdefintion.indentifier = identifier no-error.

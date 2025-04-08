@@ -123,7 +123,7 @@ class flusso.http.DotNetHttpClient
     var "System.Byte[]"                 bytes.
     var System.IO.Stream                ioStream.
 
-    requestUri = this-object:GetRequestUri(url, requestOptions:QueryParameters).
+    requestUri = this-object:GetRequestUri(url, requestOptions?:QueryParameters).
     request    = HttpWebRequest:CreateHttp(requestUri).
 
     request:Method = method.
@@ -240,9 +240,9 @@ class flusso.http.DotNetHttpClient
     Notes:
     @param baseUrl         Base url
     @param queryParameters Query parameters
-    @return Object
+    @return Uri
   ------------------------------------------------------------------------------*/
-  method private character GetRequestUri (baseUrl as char,
+  method private character GetRequestUri (baseUrl         as char,
                                           queryParameters as HashMap<String, String>):
 
     var HashMapIterator<String, String> iterator.
