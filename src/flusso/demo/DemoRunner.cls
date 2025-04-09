@@ -56,7 +56,7 @@ class flusso.demo.DemoRunner
   ------------------------------------------------------------------------------*/
   method public void ExecuteGetRequests ():
 
-    var int i.
+    var int i, totalMsec.
     var HttpResponse httpResponse.
     var IHttpClient httpClient = HttpClientFactory:Get(httpClientIdentifier).
     var datetime-tz begin.
@@ -69,10 +69,16 @@ class flusso.demo.DemoRunner
     do i = 1 to 100:
       etime(true).
       httpResponse = httpClient:Get(requestUrl).
-      message substitute("&1 - [&2] etime: &3 msec", string(i, "999"), httpClientIdentifier, etime).
+      message substitute("&1 : etime &2 msec", string(i, "999"), etime).
     end.
 
-    message substitute("Finished in &1 seconds", string(interval(now, begin, "milliseconds") / 1000)).
+    totalMsec = interval(now, begin, "milliseconds").
+
+    message substitute("~n  Finished in &1 seconds~n", round(totalMsec / 1000, 3))
+          //substitute("Average &1 milliseconds~n", round(totalMsec / 100, 3))
+            substitute("~n  HttpClient     : &1", httpClient:GetClass():TypeName)
+            substitute("~n  Request url    : &1", requestUrl)
+            substitute("~n  Request method : &1", requestMethod).
 
   end method.
 

@@ -2,7 +2,7 @@
   "abl-http-client"         : "flusso.http.AblHttpClient",
   "dotnet-http-client"      : "flusso.http.DotNetHttpClient",
 
-  "demo-abl-client-http" : {
+  "demo-abl-http" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -10,7 +10,7 @@
       "url"            : "http://jsonplaceholder.typicode.com/posts"
     }
   },
-  "demo-abl-client-https" : {
+  "demo-abl-https" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -18,7 +18,7 @@
       "url"            : "https://jsonplaceholder.typicode.com/posts"
     }
   },
-  "demo-dotnet-client-http" : {
+  "demo-dotnet-http" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -26,7 +26,7 @@
       "url"            : "http://jsonplaceholder.typicode.com/posts"
     }
   },
-  "demo-dotnet-client-https" : {
+  "demo-dotnet-https" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
