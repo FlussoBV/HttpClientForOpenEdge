@@ -116,8 +116,8 @@ class flusso.demo.DemoRunner
     var HttpRequestOptions options    = new HttpRequestOptions():SetContentType("application/json").
     var JsonObject         body       = new JsonObject().
 
-    if not requestUrl matches "*/todos" then
-      undo, throw new AppError(substitute("POST url '&1' is not implemented", requestUrl), -1).
+    //if not requestUrl matches "*/todos" then
+    //  undo, throw new AppError(substitute("POST url '&1' is not implemented", requestUrl), -1).
 
     // "id" will be determined by the host
     body:Add("userId", 10).

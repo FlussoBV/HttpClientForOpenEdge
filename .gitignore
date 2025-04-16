@@ -10,6 +10,7 @@ tmp/
 workspace/
 
 *.r
+src/out.log
 **/.DS_Store
 docker/._*
 
