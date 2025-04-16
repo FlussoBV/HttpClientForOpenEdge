@@ -80,7 +80,7 @@ class flusso.http.DotNetHttpClient
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose: Converts a HttpWebResponse to HttpResponse
+    Purpose: converts a HttpWebResponse to HttpResponse
     Notes:
     @param webResponse HttpWebResponse
     @return HttpResponse
@@ -89,7 +89,6 @@ class flusso.http.DotNetHttpClient
 
     var HttpResponse        response = new HttpResponse().
     var WebHeaderCollection headers  = webResponse:Headers.
-
     var int i.
 
     response:Status      = webResponse:StatusCode:value__.
@@ -108,8 +107,12 @@ class flusso.http.DotNetHttpClient
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose:
+    Purpose: create a request object with url, headers and payload
     Notes:
+    @param url            Url
+    @param requestOptions Request options
+    @param data           Payload body
+    @param method         Http method
   ------------------------------------------------------------------------------*/
   method private HttpResponse ExecuteRequest (url            as char,
                                               requestOptions as HttpRequestOptions,
@@ -137,6 +140,7 @@ class flusso.http.DotNetHttpClient
       end.
     end.
 
+    // add payload body to the request
     if valid-object(data) then do:
       bytes    = this-object:GetBodyInBytes(data).
       ioStream = request:GetRequestStream().
