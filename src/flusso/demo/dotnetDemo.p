@@ -13,7 +13,6 @@ block-level on error undo, throw.
 using System.IO.StreamReader.
 using System.Net.HttpWebRequest.
 using System.Net.HttpWebResponse.
-using System.Net.WebResponse.
 
 var longchar result.
 

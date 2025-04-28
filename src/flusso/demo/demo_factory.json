@@ -31,38 +31,9 @@
       "url"            : "https://jsonplaceholder.typicode.com/todos"
     }
   },
-  "demo-abl-http-get-pdf1mb" : {
-    "class"  : "flusso.demo.DemoRunner",
-    "config" : {
-      "method"         : "GET",
-      "httpClientName" : "abl-http-client",
-      "url"            : "http://speedtest.tele2.net/1MB.zip"
-    }
-  },
-  "demo-dotnet-http-get-pdf1mb" : {
-    "class"  : "flusso.demo.DemoRunner",
-    "config" : {
-      "method"         : "GET",
-      "httpClientName" : "dotnet-http-client",
-      "url"            : "http://speedtest.tele2.net/1MB.zip"
-    }
-  },
-  "demo-abl-http-get-pdf10mb" : {
-    "class"  : "flusso.demo.DemoRunner",
-    "config" : {
-      "method"         : "GET",
-      "httpClientName" : "abl-http-client",
-      "url"            : "http://speedtest.tele2.net/10MB.zip"
-    }
-  },
-  "demo-dotnet-http-get-pdf10mb" : {
-    "class"  : "flusso.demo.DemoRunner",
-    "config" : {
-      "method"         : "GET",
-      "httpClientName" : "dotnet-http-client",
-      "url"            : "http://speedtest.tele2.net/10MB.zip"
-    }
-  },
+
+
+
   "demo-abl-http-post" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
@@ -93,6 +64,41 @@
       "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos"
+    }
+  },
+
+
+
+  "demo-abl-http-get-pdf1mb" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://speedtest.tele2.net/1MB.zip"
+    }
+  },
+  "demo-dotnet-http-get-pdf1mb" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://speedtest.tele2.net/1MB.zip"
+    }
+  },
+  "demo-abl-http-get-pdf10mb" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://speedtest.tele2.net/10MB.zip"
+    }
+  },
+  "demo-dotnet-http-get-pdf10mb" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://speedtest.tele2.net/10MB.zip"
     }
   }
 }

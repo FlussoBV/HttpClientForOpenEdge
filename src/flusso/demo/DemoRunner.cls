@@ -58,11 +58,17 @@ class flusso.demo.DemoRunner
     if nrRuns eq ? or nrRuns eq 0 then
       nrRuns = 10.
 
+    message.
+
     case requestMethod:
       when "GET"  then ExecuteGetRequests(nrRuns).
       when "POST" then ExecutePostRequests(nrRuns).
       otherwise undo, throw new AppError(substitute("request method '&1' not implemented", requestMethod), -1).
     end case.
+
+    finally:
+      message.
+    end finally.
 
   end method.
 

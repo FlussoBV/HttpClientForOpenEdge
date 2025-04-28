@@ -5,7 +5,7 @@ export PROPATH=,/usr/dlc/tty/netlib/OpenEdge.Net.apl
 rm -f out.log
 touch out.log
 
-# copy certificates to DLC folder, since -certstorepath can contain only 1 location
+# copy certificates to DLC folder, since -certstorepath can only contain 1 path
 cp -p certs/* /usr/dlc/certs
 
 # don't use -preloadCLR
