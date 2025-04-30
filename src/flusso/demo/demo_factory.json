@@ -68,8 +68,75 @@
   },
 
 
+  "demo-abl-http-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-abl-https-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-dotnet-http-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-dotnet-https-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
 
-  "demo-abl-http-get-pdf1mb" : {
+
+  "demo-abl-http-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-abl-https-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-dotnet-http-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-dotnet-https-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+
+
+  "demo-abl-http-get-zip1mb" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -77,7 +144,7 @@
       "url"            : "http://speedtest.tele2.net/1MB.zip"
     }
   },
-  "demo-dotnet-http-get-pdf1mb" : {
+  "demo-dotnet-http-get-zip1mb" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -85,7 +152,7 @@
       "url"            : "http://speedtest.tele2.net/1MB.zip"
     }
   },
-  "demo-abl-http-get-pdf10mb" : {
+  "demo-abl-http-get-zip10mb" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -93,7 +160,7 @@
       "url"            : "http://speedtest.tele2.net/10MB.zip"
     }
   },
-  "demo-dotnet-http-get-pdf10mb" : {
+  "demo-dotnet-http-get-zip10mb" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",

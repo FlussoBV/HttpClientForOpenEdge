@@ -64,12 +64,12 @@ class flusso.http.AblHttpClient implements IHttpClient:
     return ExecuteRequest(builder, options).
   end method.  // Put
 
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object):
-    return this-object:Delete(url, data, ?).
+  method public HttpResponse Delete(url as char):
+    return this-object:Delete(url, ?).
   end method.  // Delete
 
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
-    var RequestBuilder builder = RequestBuilder:Put(url, data).
+  method public HttpResponse Delete(url as char, options as HttpRequestOptions): 
+    var RequestBuilder builder = RequestBuilder:Delete(url, ?).
     return ExecuteRequest(builder, options).
   end method.  // Delete
 

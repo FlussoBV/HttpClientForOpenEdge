@@ -39,7 +39,7 @@ objBody:Add("second_payload_body_param", true).
   if postPutOrDel eq "post"
   then httpResponse = httpClient:Post(url, objBody, options).
   if postPutOrDel eq "delete"
-  then httpResponse = httpClient:Delete(url, objBody, options).
+  then httpResponse = httpClient:Delete(url, options).
   else httpResponse = httpClient:Put(url, objBody, options).
   // xml:
   //httpResponse = httpClient:Post(url, xmlBody, options).

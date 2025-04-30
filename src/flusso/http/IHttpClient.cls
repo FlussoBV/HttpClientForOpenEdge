@@ -22,7 +22,7 @@ interface flusso.http.IHttpClient:
   method public HttpResponse Put(url as char, data as Progress.Lang.Object).
   method public HttpResponse Put(url as char, data as Progress.Lang.Object, options as HttpRequestOptions).
 
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object).
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions).
+  method public HttpResponse Delete(url as char).
+  method public HttpResponse Delete(url as char, options as HttpRequestOptions).
 
 end interface.  // IHttpClient

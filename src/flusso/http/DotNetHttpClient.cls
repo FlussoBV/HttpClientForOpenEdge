@@ -337,10 +337,9 @@ class flusso.http.DotNetHttpClient
     @param data Body
     @return HttpResponse
   ------------------------------------------------------------------------------*/
-  method public HttpResponse Delete(url  as char,
-                                    data as Progress.Lang.Object):
+  method public HttpResponse Delete(url  as char):
 
-    return this-object:ExecuteRequest(url, ?, data, "DELETE").
+    return this-object:ExecuteRequest(url, ?, ?, "DELETE").
 
   end method.
 
@@ -353,10 +352,9 @@ class flusso.http.DotNetHttpClient
     @return HttpResponse
   ------------------------------------------------------------------------------*/
   method public HttpResponse Delete(url            as char,
-                                    data           as Progress.Lang.Object,
                                     requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, requestOptions, data, "DELETE").
+    return this-object:ExecuteRequest(url, requestOptions, ?, "DELETE").
 
   end method.
 
