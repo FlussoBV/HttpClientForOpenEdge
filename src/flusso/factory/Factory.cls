@@ -20,7 +20,7 @@ using Progress.Lang.AppError.
 class flusso.factory.Factory implements IFactory:
   	
   define private temp-table ttdefintion no-undo
-    field indentifier as char
+    field identifier as char
     field classname as char
     field singleton as logical
     field config as Progress.Lang.Object
@@ -59,7 +59,7 @@ class flusso.factory.Factory implements IFactory:
     var Progress.Lang.Object instanceRef.
     var logical singleInstanceFound.
     
-    find ttdefintion where ttdefintion.indentifier = instanceName no-error.
+    find ttdefintion where ttdefintion.identifier = instanceName no-error.
     if not available(ttdefintion) then 
       undo, throw new AppError(substitute("no definition found for '&1'", instanceName), -1).
             
@@ -86,7 +86,7 @@ class flusso.factory.Factory implements IFactory:
     if ttdefintion.singleton and not singleInstanceFound then do:
       create ttinstance.
       assign
-        ttinstance.objtype = ttdefintion.indentifier 
+        ttinstance.objtype = ttdefintion.identifier 
         ttinstance.obj = instanceRef
         .
     end. 
@@ -110,7 +110,7 @@ class flusso.factory.Factory implements IFactory:
     @param instanceName The logical name of the requested object to delete
   ------------------------------------------------------------------------------*/
   method public logical Has(instanceName as char):
-    return can-find(first ttdefintion where ttdefintion.indentifier = instanceName).
+    return can-find(first ttdefintion where ttdefintion.identifier = instanceName).
   end method.  // Has
 
   /*------------------------------------------------------------------------------
@@ -200,16 +200,30 @@ class flusso.factory.Factory implements IFactory:
   ------------------------------------------------------------------------------*/
   method private void AddDefinition(identifier as char, classname as char, singleton as logical, config as JsonObject):
     
-    find ttdefintion where ttdefintion.indentifier = identifier no-error.
+    find ttdefintion where ttdefintion.identifier = identifier no-error.
     if not available(ttdefintion) then do:
       create ttdefintion.
-      ttdefintion.indentifier = identifier.
+      ttdefintion.identifier = identifier.
     end.
     
     ttdefintion.classname = classname.
     ttdefintion.singleton = singleton. 
     ttdefintion.config = config.
 
-  end method.  // AddDefinitions
+  end method.
+
+  /*------------------------------------------------------------------------------
+    Purpose:
+    Notes:
+  ------------------------------------------------------------------------------*/
+  method public void ShowAvailableIdentifiers ():
+
+    for each ttdefintion /*by ttdefintion.identifier*/:
+      message ttdefintion.identifier.
+    end.
+
+  end method.
+
+  // AddDefinitions
 
 end class.  // Factory

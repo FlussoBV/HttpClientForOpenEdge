@@ -46,6 +46,15 @@ class flusso.http.AblHttpClient implements IHttpClient:
     return ExecuteRequest(builder, options).
   end method.  // Get
 
+  method public HttpResponse Patch(url as char, data as Progress.Lang.Object):
+    return Patch(url, data, ?).
+  end method.  // Patch
+
+  method public HttpResponse Patch(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
+    var RequestBuilder builder = RequestBuilder:Patch(url, data).
+    return ExecuteRequest(builder, options).
+  end method.  // Patch
+
   method public HttpResponse Post(url as char, data as Progress.Lang.Object):
     return Post(url, data, ?).
   end method.  // Post

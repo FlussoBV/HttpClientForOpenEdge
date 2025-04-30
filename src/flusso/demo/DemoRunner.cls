@@ -42,7 +42,7 @@ class flusso.demo.DemoRunner
     Purpose: When the response has a statuscode >= 400, throw as error
     Notes:
   ------------------------------------------------------------------------------*/
-  method public void HandleError (httpResponse as HttpResponse):
+  method private void HandleError (httpResponse as HttpResponse):
 
     if httpResponse:Status ge 400 then
       undo, throw new AppError(substitute("&1 - &2", httpResponse:Status, httpResponse:Reason), -1).
@@ -61,10 +61,10 @@ class flusso.demo.DemoRunner
     message.
 
     case requestMethod:
-      when "GET"    then ExecuteGetDeleteRequests(nrRuns).
-      when "DELETE" then ExecuteGetDeleteRequests(nrRuns).
-      when "POST"   then ExecutePostPutRequests(nrRuns).
-      when "PUT"    then ExecutePostPutRequests(nrRuns).
+      when "GET" or when "DELETE"
+      then ExecuteRequests(nrRuns).
+      when "POST" or when "PUT" or when "PATCH"
+      then ExecuteRequestsWithBody(nrRuns).
       otherwise undo, throw new AppError(substitute("request method '&1' not implemented", requestMethod), -1).
     end case.
 
@@ -75,10 +75,10 @@ class flusso.demo.DemoRunner
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose: Execute a x number of GET requests
+    Purpose: Execute a x number of GET/DELETE requests (no body)
     Notes:
   ------------------------------------------------------------------------------*/
-  method public void ExecuteGetDeleteRequests (nrReq as int):
+  method private void ExecuteRequests (nrReq as int):
 
     var int i, totalMsec.
     var HttpResponse httpResponse.
@@ -103,11 +103,14 @@ class flusso.demo.DemoRunner
       else
         httpResponse = httpClient:Delete(requestUrl).
       this-object:HandleError(httpResponse).
-      message substitute("&1 : etime &2 msec - &3 &4"
+      message substitute("&1 : etime &2 msec - &3 &4 "
                         ,string(i, "999")
                         ,etime
                         ,httpResponse:Status
-                        ,httpResponse:Reason).
+                        ,httpResponse:Reason)
+                      //+ "(" + httpResponse:Body:GetClass():TypeName + ") "
+                      //+ string(cast(httpResponse:Body, Json):GetJsonText())
+                        .
     end.
 
     totalMsec = interval(now, begin, "milliseconds").
@@ -121,10 +124,10 @@ class flusso.demo.DemoRunner
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose: Execute a x number of POST requests
+    Purpose: Execute a x number of POST/PUT/PATCH requests
     Notes:
   ------------------------------------------------------------------------------*/
-  method public void ExecutePostPutRequests (nrReq as int):
+  method private void ExecuteRequestsWithBody (nrReq as int):
 
     var int i, totalMsec.
     var datetime-tz begin.
@@ -167,7 +170,8 @@ class flusso.demo.DemoRunner
                         ,string(i, "999"), etime
                         ,httpResponse:Status
                         ,httpResponse:Reason)
-                       //+ string(cast(httpResponse:Body, JsonObject):GetJsonText())
+                      //+ "(" + httpResponse:Body:GetClass():TypeName + ") "
+                      //+ string(cast(httpResponse:Body, JsonObject):GetJsonText())
                          .
     end.
 

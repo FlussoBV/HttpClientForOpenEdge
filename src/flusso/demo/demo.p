@@ -25,6 +25,12 @@ nrRuns = int(entry(2, session:parameter)) no-error.
 
 runner:Run(nrRuns).
 
+catch err as Progress.Lang.Error:
+    message "Available factory identifiers:".
+    message "------------------------------".
+    cast(factory, Factory):ShowAvailableIdentifiers().
+end catch.
+
 /***
 demo-abl-http-get
 demo-abl-https-get

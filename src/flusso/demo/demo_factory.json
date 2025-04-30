@@ -101,6 +101,39 @@
     }
   },
 
+  "demo-abl-http-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-abl-https-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-dotnet-http-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+  "demo-dotnet-https-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+    }
+  },
+
 
   "demo-abl-http-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -136,20 +169,20 @@
   },
 
 
-  "demo-abl-http-get-zip1mb" : {
+  "demo-abl-http-get-zip" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
       "httpClientName" : "abl-http-client",
-      "url"            : "http://speedtest.tele2.net/1MB.zip"
+      "url"            : "http://www.kelters.nl/hulpSetup.zip"
     }
   },
-  "demo-dotnet-http-get-zip1mb" : {
+  "demo-dotnet-http-get-zip" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "http://speedtest.tele2.net/1MB.zip"
+      "url"            : "http://www.kelters.nl/hulpSetup.zip"
     }
   },
   "demo-abl-http-get-zip10mb" : {
@@ -168,4 +201,5 @@
       "url"            : "http://speedtest.tele2.net/10MB.zip"
     }
   }
+
 }
