@@ -11,7 +11,7 @@
 interface flusso.factory.IFactory:
 
   method public Progress.Lang.Object GetInstance(instanceName as char).
-  method public Progress.Lang.Object DeleteInstance(instanceName as char).
+  method public void DeleteInstance(instanceName as char).
   method public logical Has(instanceName as char).
   
 end interface.  // IFactory

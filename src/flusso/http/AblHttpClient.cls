@@ -1,6 +1,6 @@
 
  /*------------------------------------------------------------------------
-    File        : AppHttpClient
+    File        : AblHttpClient
     Purpose     : 
     Syntax      : 
     Author(s)   : bronco / Flusso B.V.
@@ -10,33 +10,31 @@
 
 block-level on error undo, throw.
 
-using flusso.http.IHttpClient.
-using flusso.http.HttpRequestOptions.
-using flusso.http.HttpResponse.
+using OpenEdge.Core.String.
 using OpenEdge.Net.HTTP.ClientBuilder.
+using OpenEdge.Net.HTTP.HttpHeader.
 using OpenEdge.Net.HTTP.IHttpClientLibrary.
 using OpenEdge.Net.HTTP.IHttpRequest.
 using OpenEdge.Net.HTTP.IHttpResponse.
-using OpenEdge.Net.HTTP.HttpHeader.
-using OpenEdge.Net.HTTP.RequestBuilder.
 using OpenEdge.Net.HTTP.Lib.ClientLibraryBuilder.
-using OpenEdge.Core.String.
+using OpenEdge.Net.HTTP.RequestBuilder.
+using OpenEdge.Net.ServerConnection.TlsClientAuthenticationError.
 using Progress.Collections.HashMap.
 using Progress.Collections.HashMapIterator.
+using flusso.http.HttpRequestOptions.
+using flusso.http.HttpResponse.
+using flusso.http.IHttpClient.
 
 class flusso.http.AblHttpClient implements IHttpClient:
 
-  var private IHttpClientLibrary httpClientLibrary.
-  var char[] protocols = ["TLSv1.2"].
+  //var private IHttpClientLibrary httpClientLibrary.
+  var private ClientLibraryBuilder libraryBuilder. 
 
   constructor public AblHttpClient():
 
-    httpClientLibrary = ClientLibraryBuilder
-                               :Build()
-                               :SetSSLProtocols(protocols)
-                               //:SetSSLCiphers(ciphers)
-                               :Library.
-    
+    var char[] protocols = [ "TLSv1.2" ].
+    libraryBuilder = ClientLibraryBuilder:Build():SetSSLProtocols(protocols).
+
   end constructor.
   
   method public HttpResponse Get(url as char): 
@@ -47,6 +45,15 @@ class flusso.http.AblHttpClient implements IHttpClient:
     var RequestBuilder builder = RequestBuilder:Get(url).
     return ExecuteRequest(builder, options).
   end method.  // Get
+
+  method public HttpResponse Patch(url as char, data as Progress.Lang.Object):
+    return Patch(url, data, ?).
+  end method.  // Patch
+
+  method public HttpResponse Patch(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
+    var RequestBuilder builder = RequestBuilder:Patch(url, data).
+    return ExecuteRequest(builder, options).
+  end method.  // Patch
 
   method public HttpResponse Post(url as char, data as Progress.Lang.Object):
     return Post(url, data, ?).
@@ -66,12 +73,12 @@ class flusso.http.AblHttpClient implements IHttpClient:
     return ExecuteRequest(builder, options).
   end method.  // Put
 
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object):
-    return this-object:Delete(url, data, ?).
+  method public HttpResponse Delete(url as char):
+    return this-object:Delete(url, ?).
   end method.  // Delete
 
-  method public HttpResponse Delete(url as char, data as Progress.Lang.Object, options as HttpRequestOptions): 
-    var RequestBuilder builder = RequestBuilder:Put(url, data).
+  method public HttpResponse Delete(url as char, options as HttpRequestOptions): 
+    var RequestBuilder builder = RequestBuilder:Delete(url, ?).
     return ExecuteRequest(builder, options).
   end method.  // Delete
 
@@ -79,19 +86,22 @@ class flusso.http.AblHttpClient implements IHttpClient:
     
     var IHttpRequest request.
     var IHttpResponse oeResponse.
-    var HttpResponse response.
+    var HttpResponse response = new HttpResponse().
+    var IHttpClientLibrary httpClientLibrary.
     var OpenEdge.Net.HTTP.IHttpClient client.
-    
-    response = new HttpResponse().
 
-    builder = this-object:ApplyOptions(builder, options).
+    this-object:ApplyOptions(builder, options).
 
     request = builder:Request.
+
+    // need to add host for SSL connections with hosts like 'sub.domain.com'
+    httpClientLibrary = libraryBuilder:ServerNameIndicator(request:URI:Host)
+                                                          :Library.
+
     if options?:QueryParameters:Count > 0 then
       AddQueryParametersToRequest(request, options:QueryParameters).
 
-    client = ClientBuilder
-               :Build()
+    client = ClientBuilder:Build()
                :UsingLibrary(httpClientLibrary)
                :Client.
 
@@ -105,6 +115,14 @@ class flusso.http.AblHttpClient implements IHttpClient:
       response:Body = oeResponse:Entity.
       response:Headers = GetHeaders(oeResponse).
 
+      // tlserr has more properties, inner error and methods
+      catch tlserr as TlsClientAuthenticationError :
+          response:Status = 525. // SSL Handshake Failed
+          response:Reason = tlserr:GetShortMessage().
+          //if valid-object(tlserr:InnerError) then
+          //  response:Reason += " / " + tlserr:InnerError:GetMessage(1).
+      end catch.
+
       catch err1 as Progress.Lang.Error:
         response:Status = int(err1:GetMessage(1)).
         response:Reason = substitute("&1:&2 - &3", err1:GetMessage(2), err1:GetMessage(3), err1:GetMessage(4)).
@@ -116,14 +134,12 @@ class flusso.http.AblHttpClient implements IHttpClient:
 
   end method.  // ExecuteRequest
 
-  method private RequestBuilder ApplyOptions(builder as RequestBuilder, options as HttpRequestOptions): 
+  method private void ApplyOptions(builder as RequestBuilder, options as HttpRequestOptions): 
 
     if not valid-object(options) then
-      return builder.
+      return.
 
     AddHeadersToRequest(builder, options).
-
-    return builder.
 
   end method.  // ApplyOptions
 

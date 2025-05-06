@@ -27,6 +27,7 @@ using System.Text.Encoding.
 using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
+using System.IO.MemoryStream.
 
 class flusso.http.DotNetHttpClient
   implements IHttpClient:
@@ -40,16 +41,20 @@ class flusso.http.DotNetHttpClient
   method protected Progress.Lang.Object ConvertBody (webResponse as HttpWebResponse):
 
     // GetResponseStream returns the result body of the the Response
-    var StreamReader      streamReader = new StreamReader(webResponse:GetResponseStream()).
+    var StreamReader      streamReader.
     var ObjectModelParser jsonParser.
+    var MemoryStream      memoryStream.
 
-    var longchar body = streamReader:ReadToEnd().
-    var handle   xmlBody.
-    var memptr   memBody.
+    var longchar        body.
+    var handle          xmlBody.
+    var memptr          memBody.
+    var "System.Byte[]" bytes.
 
     // xml body
     if    webResponse:ContentType matches "*/xml*"
        or webResponse:ContentType matches "*/html*" then do:
+      streamReader = new StreamReader(webResponse:GetResponseStream()).
+      body = streamReader:ReadToEnd().
       create x-document xmlBody.
       xmlBody:load("longchar", body, false).
       return new WidgetHandle(xmlBody, true).
@@ -57,22 +62,33 @@ class flusso.http.DotNetHttpClient
 
     // json body
     if webResponse:ContentType matches "*/json*" then do:
+      streamReader = new StreamReader(webResponse:GetResponseStream()).
+      body = streamReader:ReadToEnd().
       jsonParser = new ObjectModelParser().
       return cast(jsonParser:Parse(body), JsonConstruct).
     end.
 
     // text body
     if    webResponse:ContentType matches "*/plain*"
-       or webResponse:ContentType begins "text/" then
+       or webResponse:ContentType begins "text/" then do:
+      streamReader = new StreamReader(webResponse:GetResponseStream()).
+      body = streamReader:ReadToEnd().
       return new String(body).
+    end.
 
     // other
     do on error undo, throw:
-      set-size(memBody) = length(body, "raw") + 1.
-      put-string(memBody, 1) = body.
+      memoryStream = new MemoryStream().
+      webResponse:GetResponseStream():CopyTo(memoryStream).
+      bytes = memoryStream:ToArray().
+      memBody = util.bytearrayhelper:ByteArrayToMemptr(bytes).
       return new OpenEdge.Core.Memptr(memBody).
 
       finally:
+        if valid-object(memoryStream) then do:
+          memoryStream:Close().
+          delete object memoryStream.
+        end.
         set-size(memBody) = 0.
       end finally.
     end.
@@ -80,7 +96,7 @@ class flusso.http.DotNetHttpClient
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose: Converts a HttpWebResponse to HttpResponse
+    Purpose: converts a HttpWebResponse to HttpResponse
     Notes:
     @param webResponse HttpWebResponse
     @return HttpResponse
@@ -89,7 +105,6 @@ class flusso.http.DotNetHttpClient
 
     var HttpResponse        response = new HttpResponse().
     var WebHeaderCollection headers  = webResponse:Headers.
-
     var int i.
 
     response:Status      = webResponse:StatusCode:value__.
@@ -108,8 +123,12 @@ class flusso.http.DotNetHttpClient
   end method.
 
   /*------------------------------------------------------------------------------
-    Purpose:
+    Purpose: create a request object with url, headers and payload
     Notes:
+    @param url            Url
+    @param requestOptions Request options
+    @param data           Payload body
+    @param method         Http method
   ------------------------------------------------------------------------------*/
   method private HttpResponse ExecuteRequest (url            as char,
                                               requestOptions as HttpRequestOptions,
@@ -123,7 +142,7 @@ class flusso.http.DotNetHttpClient
     var "System.Byte[]"                 bytes.
     var System.IO.Stream                ioStream.
 
-    requestUri = this-object:GetRequestUri(url, requestOptions:QueryParameters).
+    requestUri = this-object:GetRequestUri(url, requestOptions?:QueryParameters).
     request    = HttpWebRequest:CreateHttp(requestUri).
 
     request:Method = method.
@@ -137,6 +156,7 @@ class flusso.http.DotNetHttpClient
       end.
     end.
 
+    // add payload body to the request
     if valid-object(data) then do:
       bytes    = this-object:GetBodyInBytes(data).
       ioStream = request:GetRequestStream().
@@ -182,7 +202,7 @@ class flusso.http.DotNetHttpClient
     @param data Data
     @return Bytes array
   ------------------------------------------------------------------------------*/
-  method public "System.Byte[]" GetBodyInBytes (data as Progress.Lang.Object):
+  method private "System.Byte[]" GetBodyInBytes (data as Progress.Lang.Object):
 
     var System.IntPtr   ptr.
     var int             size.
@@ -240,9 +260,9 @@ class flusso.http.DotNetHttpClient
     Notes:
     @param baseUrl         Base url
     @param queryParameters Query parameters
-    @return Object
+    @return Uri
   ------------------------------------------------------------------------------*/
-  method private character GetRequestUri (baseUrl as char,
+  method private character GetRequestUri (baseUrl         as char,
                                           queryParameters as HashMap<String, String>):
 
     var HashMapIterator<String, String> iterator.
@@ -263,6 +283,36 @@ class flusso.http.DotNetHttpClient
     end.
 
     return right-trim(requestUri, "&").
+
+  end method.
+
+  /*------------------------------------------------------------------------------
+    Purpose: PATCH
+    Notes:
+    @param url  Url
+    @param data Body
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
+  method public HttpResponse Patch(url  as char,
+                                   data as Progress.Lang.Object):
+
+    return this-object:ExecuteRequest(url, ?, data, "PATCH").
+
+  end method.
+
+  /*------------------------------------------------------------------------------
+    Purpose: PATCH
+    Notes:
+    @param url            Url
+    @param data           Body
+    @param requestOptions Request options
+    @return HttpResponse
+  ------------------------------------------------------------------------------*/
+  method public HttpResponse Patch (url            as char,
+                                    data           as Progress.Lang.Object,
+                                    requestOptions as HttpRequestOptions):
+
+    return this-object:ExecuteRequest(url, requestOptions, data, "PATCH").
 
   end method.
 
@@ -333,10 +383,9 @@ class flusso.http.DotNetHttpClient
     @param data Body
     @return HttpResponse
   ------------------------------------------------------------------------------*/
-  method public HttpResponse Delete(url  as char,
-                                    data as Progress.Lang.Object):
+  method public HttpResponse Delete(url  as char):
 
-    return this-object:ExecuteRequest(url, ?, data, "DELETE").
+    return this-object:ExecuteRequest(url, ?, ?, "DELETE").
 
   end method.
 
@@ -349,10 +398,9 @@ class flusso.http.DotNetHttpClient
     @return HttpResponse
   ------------------------------------------------------------------------------*/
   method public HttpResponse Delete(url            as char,
-                                    data           as Progress.Lang.Object,
                                     requestOptions as HttpRequestOptions):
 
-    return this-object:ExecuteRequest(url, requestOptions, data, "DELETE").
+    return this-object:ExecuteRequest(url, requestOptions, ?, "DELETE").
 
   end method.
 

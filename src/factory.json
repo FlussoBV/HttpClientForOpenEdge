@@ -1,0 +1,6 @@
+{
+  "default-http-client" : "flusso.http.DotNetHttpClient",
+
+  "abl-http-client"    : "flusso.http.AblHttpClient",
+  "dotnet-http-client" : "flusso.http.DotNetHttpClient"
+}

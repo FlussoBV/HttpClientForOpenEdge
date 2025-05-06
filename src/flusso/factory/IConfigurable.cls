@@ -1,12 +1,12 @@
-
- /*------------------------------------------------------------------------
-    File        : IConfigurable
-    Purpose     : 
-    Syntax      : 
-    Author(s)   : bronco
-    Created     : Mon Mar 10 07:23:35 +01:00 2025
-    Notes       : 
-  ----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------
+  File        : IConfigurable
+  Purpose     : 
+  Syntax      : 
+  Author(s)   : bronco
+  Created     : Mon Mar 10 07:23:35 +01:00 2025
+  Notes       : Copyright 2025 Flusso B.V.
+                Developed under MIT License, see LICENSE file
+----------------------------------------------------------------------*/
 
 using Progress.Json.ObjectModel.JsonObject.
 

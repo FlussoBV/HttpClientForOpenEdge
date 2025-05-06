@@ -44,7 +44,7 @@ factory:LoadDefintions("another-factory.json").
 Note: `LoadDefintions` can be called multiple times. Already existing identifier will be overwritten. In other words, if one loads two json factory JSON files with a defintion for `IHttpClient`, the last one wins.
 
 ## singletons
-It's possible to define a factory as a singletion, so that max 1 instance ins created and that one is re-used in subsequent `GetInstance` calls. In this case the JSON definition line should look like:
+It's possible to define a factory as a singleton, so that max 1 instance is created and that one is re-used in subsequent `GetInstance` calls. In this case the JSON definition line should look like:
 ```
 { "session-manager": "{ "class": "lib.core.SessionManager", "singleton": true}
 ```
