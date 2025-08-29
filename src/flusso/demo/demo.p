@@ -18,10 +18,18 @@ using flusso.factory.IFactory.
 
 var char       identifier = entry(1, session:parameter).
 var int        nrRuns.
-var IFactory   factory    = new Factory("flusso/demo/demo_factory.json").
-var DemoRunner runner     = cast(factory:GetInstance(identifier), DemoRunner).
+var IFactory   factory.
+var DemoRunner runner.
 
-nrRuns = int(entry(2, session:parameter)) no-error.
+if    identifier eq "version"
+   or identifier eq "--version" then do:
+  message ".NET version:" System.Environment:Version:ToString().
+  return.
+end.
+
+factory = new Factory("flusso/demo/demo_factory.json").
+runner  = cast(factory:GetInstance(identifier), DemoRunner).
+nrRuns  = int(entry(2, session:parameter)) no-error.
 
 runner:Run(nrRuns).
 

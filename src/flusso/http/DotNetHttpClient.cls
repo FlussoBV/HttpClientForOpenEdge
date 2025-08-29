@@ -17,6 +17,9 @@ using Progress.Collections.HashMapIterator.
 using Progress.Json.ObjectModel.JsonConstruct.
 using Progress.Json.ObjectModel.ObjectModelParser.
 using Progress.Lang.AppError.
+using System.IO.Compression.CompressionMode.
+using System.IO.Compression.GZipStream.
+using System.IO.MemoryStream.
 using System.IO.StreamReader.
 using System.Net.HttpWebRequest.
 using System.Net.HttpWebResponse.
@@ -27,7 +30,6 @@ using System.Text.Encoding.
 using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
-using System.IO.MemoryStream.
 
 class flusso.http.DotNetHttpClient
   implements IHttpClient:
@@ -41,7 +43,6 @@ class flusso.http.DotNetHttpClient
   method protected Progress.Lang.Object ConvertBody (webResponse as HttpWebResponse):
 
     // GetResponseStream returns the result body of the the Response
-    var StreamReader      streamReader.
     var ObjectModelParser jsonParser.
     var MemoryStream      memoryStream.
 
@@ -53,8 +54,7 @@ class flusso.http.DotNetHttpClient
     // xml body
     if    webResponse:ContentType matches "*/xml*"
        or webResponse:ContentType matches "*/html*" then do:
-      streamReader = new StreamReader(webResponse:GetResponseStream()).
-      body = streamReader:ReadToEnd().
+      body = this-object:GetResponseBody(webResponse).
       create x-document xmlBody.
       xmlBody:load("longchar", body, false).
       return new WidgetHandle(xmlBody, true).
@@ -62,8 +62,7 @@ class flusso.http.DotNetHttpClient
 
     // json body
     if webResponse:ContentType matches "*/json*" then do:
-      streamReader = new StreamReader(webResponse:GetResponseStream()).
-      body = streamReader:ReadToEnd().
+      body = this-object:GetResponseBody(webResponse).
       jsonParser = new ObjectModelParser().
       return cast(jsonParser:Parse(body), JsonConstruct).
     end.
@@ -71,8 +70,7 @@ class flusso.http.DotNetHttpClient
     // text body
     if    webResponse:ContentType matches "*/plain*"
        or webResponse:ContentType begins "text/" then do:
-      streamReader = new StreamReader(webResponse:GetResponseStream()).
-      body = streamReader:ReadToEnd().
+      body = this-object:GetResponseBody(webResponse).
       return new String(body).
     end.
 
@@ -167,6 +165,11 @@ class flusso.http.DotNetHttpClient
     webResponse = cast(request:GetResponse(), HttpWebResponse).
 
     return this-object:ConvertResponse(webResponse).
+
+    finally:
+      if valid-object(webResponse) then
+        webResponse:Close().
+    end finally.
 
   end method.
 
@@ -283,6 +286,42 @@ class flusso.http.DotNetHttpClient
     end.
 
     return right-trim(requestUri, "&").
+
+  end method.
+
+  /*------------------------------------------------------------------------------
+    Purpose: Gets the response body, when it's GZip, then decompress it
+    Notes:
+  ------------------------------------------------------------------------------*/
+  method protected longchar GetResponseBody (webResponse as HttpWebResponse):
+
+    var StreamReader streamReader.
+    var GZipStream   gzipStream.
+    var longchar     body.
+
+    fix-codepage(body) = "utf-8".
+
+    if webResponse:ContentEncoding matches "*gzip*" then
+      assign
+        gzipStream   = new GZipStream(webResponse:GetResponseStream(), CompressionMode:Decompress)
+        streamReader = new StreamReader(gzipStream).
+    else
+      streamReader = new StreamReader(webResponse:GetResponseStream()).
+
+    body = streamReader:ReadToEnd().
+
+    return body.
+
+    finally:
+      if valid-object(gzipStream) then do:
+        gzipStream:Close().
+        delete object gzipStream.
+      end.
+      if valid-object(streamReader) then do:
+        streamReader:Close().
+        delete object streamReader.
+      end.
+    end finally.
 
   end method.
 
