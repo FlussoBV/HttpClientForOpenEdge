@@ -8,6 +8,7 @@ db/
 sandbox/
 tmp/
 workspace/
+.history/
 
 *.r
 src/out.log
@@ -15,3 +16,4 @@ src/out.log
 docker/._*
 
 license/progress.cfg
+
