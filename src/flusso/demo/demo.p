@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------
   File        : demo.p
-  Purpose     : 
+  Purpose     :
   Syntax      :
-  Description : 
+  Description :
   Author(s)   : arno
   Created     : Tue Apr 08 20:08:28 CEST 2025
   Notes       : Copyright 2025 Flusso B.V.
@@ -34,19 +34,12 @@ nrRuns  = int(entry(2, session:parameter)) no-error.
 runner:Run(nrRuns).
 
 catch err as Progress.Lang.Error:
+    message err:GetMessage(1).
     message "Available factory identifiers:".
     message "------------------------------".
     cast(factory, Factory):ShowAvailableIdentifiers().
 end catch.
 
-/***
-demo-abl-http-get
-demo-abl-https-get
-demo-abl-http-get-pdf1mb
-demo-abl-http-get-pdf10mb
-
-demo-dotnet-http-get
-demo-dotnet-https-get
-demo-dotnet-http-get-pdf1mb
-demo-dotnet-http-get-pdf10mb
-***/
+finally:
+  quit.
+end finally.

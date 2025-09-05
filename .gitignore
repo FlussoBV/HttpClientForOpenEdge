@@ -15,5 +15,4 @@ src/out.log
 **/.DS_Store
 docker/._*
 
-license/progress.cfg
-
+license/
