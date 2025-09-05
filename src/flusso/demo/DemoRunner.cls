@@ -25,6 +25,7 @@ class flusso.demo.DemoRunner
    var private char httpClientIdentifier.
    var private char requestMethod.
    var private char requestUrl.
+   var private IHttpClient  httpClient.
 
   /*------------------------------------------------------------------------------
     Purpose: Configure
@@ -35,6 +36,8 @@ class flusso.demo.DemoRunner
     httpClientIdentifier = config:GetCharacter("httpClientName").
     requestMethod        = config:GetCharacter("method").
     requestUrl           = config:GetCharacter("url").
+
+    httpClient = HttpClientFactory:Get(httpClientIdentifier).
 
   end method.
 
@@ -80,46 +83,11 @@ class flusso.demo.DemoRunner
   ------------------------------------------------------------------------------*/
   method private void ExecuteRequests (nrReq as int):
 
-    var int i, totalMsec.
-    var HttpResponse httpResponse.
-    var IHttpClient httpClient = HttpClientFactory:Get(httpClientIdentifier).
-    var datetime-tz begin.
-
-    // dry run
-    etime(true).
-    if requestMethod eq "GET" then
-      httpResponse = httpClient:Get(requestUrl).
-    else
-      httpResponse = httpClient:Delete(requestUrl).
-    this-object:HandleError(httpResponse).
-    message substitute("dry : etime &1 msec~n~n~n", etime).
-
-    begin = now.
-
-    do i = 1 to nrReq:
-      etime(true).
-      if requestMethod eq "GET" then
-        httpResponse = httpClient:Get(requestUrl).
-      else
-        httpResponse = httpClient:Delete(requestUrl).
-      this-object:HandleError(httpResponse).
-      message substitute("&1 : etime &2 msec - &3 &4 "
-                        ,string(i, "999")
-                        ,etime
-                        ,httpResponse:Status
-                        ,httpResponse:Reason)
-                      //+ "(" + httpResponse:Body:GetClass():TypeName + ") "
-                      //+ string(cast(httpResponse:Body, Json):GetJsonText())
-                        .
-    end.
-
-    totalMsec = interval(now, begin, "milliseconds").
-
-    message substitute("~n  Finished &1 &2 requests in &3 seconds (excl. dry)~n", nrReq, requestMethod, round(totalMsec / 1000, 3))
-          //substitute("Average &1 milliseconds~n", round(totalMsec / nrReq, 3))
-            substitute("~n  HttpClient     : &1", httpClient:GetClass():TypeName)
-            substitute("~n  Request url    : &1", requestUrl)
-            substitute("~n  Request method : &1", requestMethod).
+    ExecuteRequests( httpClient
+                   , requestUrl
+                   , requestMethod
+                   , nrReq
+                   , ? ).
 
   end method.
 
@@ -129,30 +97,50 @@ class flusso.demo.DemoRunner
   ------------------------------------------------------------------------------*/
   method private void ExecuteRequestsWithBody (nrReq as int):
 
-    var int i, totalMsec.
-    var datetime-tz begin.
-
-    var HttpResponse       httpResponse.
-    var IHttpClient        httpClient = HttpClientFactory:Get(httpClientIdentifier).
-    var HttpRequestOptions options    = new HttpRequestOptions():SetContentType("application/json").
     var JsonObject         body       = new JsonObject().
 
-    //if not requestUrl matches "*/todos" then
-    //  undo, throw new AppError(substitute("POST url '&1' is not implemented", requestUrl), -1).
-
-    // "id" will be determined by the host
+    body:Add("id", 10).
     body:Add("userId", 10).
     body:Add("title", substitute("&1 at : &2", lc(requestMethod), iso-date(now))).
     body:Add("completed", true).
 
+    ExecuteRequests( httpClient
+                   , requestUrl
+                   , requestMethod
+                   , nrReq
+                   , body ).
+
+
+  end method.
+
+  /*------------------------------------------------------------------------------
+    Purpose: Execute a x number of POST/PUT/PATCH requests
+    Notes:
+  ------------------------------------------------------------------------------*/
+  method private void ExecuteRequests ( httpClient as IHttpClient
+                                      , requestUrl as char
+                                      , requestMethod as char
+                                      , nrReq as int
+                                      , body as JsonObject):
+
+    var int i, totalMsec, dryRunMsec, averageMsec.
+    var datetime-tz begin.
+
+    var HttpResponse       httpResponse.
+    var HttpRequestOptions options    = new HttpRequestOptions():SetContentType("application/json").
+
     // dry run
     etime(true).
-    if requestMethod eq "POST" then
-      httpResponse = httpClient:Post(requestUrl, body, options).
-    else
-      httpResponse = httpClient:Put(requestUrl, body, options).
+    case requestMethod:
+      when "POST"   then  httpResponse = httpClient:Post(requestUrl, body, options).
+      when "PUT"    then  httpResponse = httpClient:Put(requestUrl, body, options).
+      when "PATCH"  then  httpResponse = httpClient:Patch(requestUrl, body, options).
+      when "GET"    then  httpResponse = httpClient:Get(requestUrl, options).
+      when "DELETE" then  httpResponse = httpClient:Delete(requestUrl, options).
+    end case.
     this-object:HandleError(httpResponse).
-    message substitute("dry : etime &1 msec~n~n~n", etime).
+    dryRunMsec = etime.
+    message substitute("dry : etime &1 msec~n~n~n", dryRunMsec).
 
     if httpResponse:Status ge 400 then
       undo, throw new AppError(substitute("Error: &1 - &2", httpResponse:Status, httpResponse:Reason), -1).
@@ -161,23 +149,28 @@ class flusso.demo.DemoRunner
 
     do i = 1 to nrReq:
       etime(true).
-      if requestMethod eq "POST" then
-        httpResponse = httpClient:Post(requestUrl, body, options).
-      else
-        httpResponse = httpClient:Put(requestUrl, body, options).
+      case requestMethod:
+        when "POST"   then  httpResponse = httpClient:Post(requestUrl, body, options).
+        when "PUT"    then  httpResponse = httpClient:Put(requestUrl, body, options).
+        when "PATCH"  then  httpResponse = httpClient:Patch(requestUrl, body, options).
+        when "GET"    then  httpResponse = httpClient:Get(requestUrl, options).
+        when "DELETE" then  httpResponse = httpClient:Delete(requestUrl, options).
+      end case.
       this-object:HandleError(httpResponse).
       message substitute("&1 : etime &2 msec - &3 &4 "
                         ,string(i, "999"), etime
                         ,httpResponse:Status
                         ,httpResponse:Reason)
-                      //+ "(" + httpResponse:Body:GetClass():TypeName + ") "
-                      //+ string(cast(httpResponse:Body, JsonObject):GetJsonText())
                          .
     end.
 
     totalMsec = interval(now, begin, "milliseconds").
+    averageMsec = round(totalMsec / nrReq, 3).
 
     message substitute("~n  Finished &1 &2 requests in &3 seconds (excl. dry)~n", nrReq, requestMethod, round(totalMsec / 1000, 3))
+            substitute("~n  Dry run        : &1 milliseconds", string(dryRunMsec, "zzz9"))
+            substitute("~n  Average        : &1 milliseconds", string(averageMsec, "zzz9"))
+            substitute("~n  Initialize     : &1 milliseconds~n", string(dryRunMsec - averageMsec, "zzz9"))
             substitute("~n  HttpClient     : &1", httpClient:GetClass():TypeName)
             substitute("~n  Request url    : &1", requestUrl)
             substitute("~n  Request method : &1", requestMethod).
