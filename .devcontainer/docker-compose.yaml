@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  devcontainer:
+    image: docker.io/devbfvio/openedge-devcontainer:12.8.7-dotnet8
+    volumes:
+      - ../:/workspaces:cached
+      - ${LICENSE_FILE}:/usr/dlc/progress.cfg
+      - ../:/app/
+    ports:
+      - 3099:3099
+    command: sleep infinity
+
+  pas:
+    image: ${PAS_IMAGE}
+    volumes:
+      - ${LICENSE_FILE}:/usr/dlc/progress.cfg
+      - ../../fwebh/src:/app/src
+    ports:
+      - ${PAS_PORT}:8810
+    environment:
+      - PASWEBHANDLERS=../../fwebh/src/fwebh/pas/webhandlers/ROOT.handlers
+    command:
+      - /app/pas/start.sh

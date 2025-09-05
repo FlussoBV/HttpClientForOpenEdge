@@ -1,0 +1,7 @@
+
+-clrnetcore
+-assemblies ../assemblies
+-preloadCLR
+-q
+-rr
+-reusableObjects 500000
