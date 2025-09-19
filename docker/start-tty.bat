@@ -1,4 +1,6 @@
-#!/bin/sh
+@ECHO OFF
+
+set CONTAINER=http-client-pug-container
 
 echo "Start container (interactive) ..."
 
@@ -6,5 +8,4 @@ docker ps
 
 echo
 
-REM docker run -it -v $(pwd)/../src:/app/src httpclient4oe
-docker start -i http-client-container
+docker start -i %CONTAINER%

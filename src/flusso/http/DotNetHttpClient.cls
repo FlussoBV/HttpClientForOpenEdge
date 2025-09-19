@@ -27,6 +27,7 @@ using System.Net.WebHeaderCollection.
 using System.Net.WebUtility.
 using System.Runtime.InteropServices.Marshal.
 using System.Text.Encoding.
+using flusso.util.ByteArrayHelper.
 using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
@@ -79,7 +80,7 @@ class flusso.http.DotNetHttpClient
       memoryStream = new MemoryStream().
       webResponse:GetResponseStream():CopyTo(memoryStream).
       bytes = memoryStream:ToArray().
-      memBody = util.bytearrayhelper:ByteArrayToMemptr(bytes).
+      memBody = ByteArrayHelper:ByteArrayToMemptr(bytes).
       return new OpenEdge.Core.Memptr(memBody).
 
       finally:
