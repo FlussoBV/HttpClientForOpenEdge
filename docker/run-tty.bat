@@ -1,18 +1,13 @@
 @ECHO OFF
-set CONTAINER=http-client-container
-set IMAGE=devbfvio/openedge-compiler:12.8.9-dotnet8
 
-echo "Stop container %CONTAINER%cat "
+set IMAGE=flusso/http-client-pug-image
+set CONTAINER=http-client-pug-container
+
+echo "Stop container %CONTAINER% ..."
 docker stop %CONTAINER%
-pause
 
-echo "Remove container %CONTAINER%"
+echo "Remove container %CONTAINER% ..."
 docker rm %CONTAINER%
-pause
-
-echo "Remove image %IMAGE%"
-docker rmi %IMAGE%
-pause
 
 echo "Run new container (interactive) ..."
 docker run -it ^
@@ -24,6 +19,3 @@ docker run -it ^
    -v %CD%/../config:/app/config ^
    %IMAGE% ^
    bash
-
-pause
-

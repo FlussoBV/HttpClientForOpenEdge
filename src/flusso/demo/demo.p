@@ -15,11 +15,14 @@ using Progress.Lang.AppError.
 using flusso.demo.DemoRunner.
 using flusso.factory.Factory.
 using flusso.factory.IFactory.
+using flusso.util.ErrorHelper.
 
 var char       identifier = entry(1, session:parameter).
 var int        nrRuns.
 var IFactory   factory.
 var DemoRunner runner.
+
+session:error-stack-trace = true.
 
 if    identifier eq "version"
    or identifier eq "--version" then do:
@@ -34,10 +37,12 @@ nrRuns  = int(entry(2, session:parameter)) no-error.
 runner:Run(nrRuns).
 
 catch err as Progress.Lang.Error:
-    message err:GetMessage(1).
-    message "Available factory identifiers:".
-    message "------------------------------".
-    cast(factory, Factory):ShowAvailableIdentifiers().
+    if err:GetMessage(1) begins "no definition found" then do:
+      message "~nAvailable factory identifiers:".
+      message "------------------------------".
+      cast(factory, Factory):ShowAvailableIdentifiers().
+    end.
+    else ErrorHelper:LogError(err).
 end catch.
 
 finally:
