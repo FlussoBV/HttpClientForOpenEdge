@@ -12,6 +12,7 @@ docker rm ${container}
 echo "Run new container (interactive) ..."
 docker run -it \
   --name ${container} \
+  --network appnet \
   --platform linux/amd64 \
   -v $(pwd)/../license/progress.cfg:/usr/dlc/progress.cfg \
   -v $(pwd)/../src:/app/src \

@@ -200,6 +200,48 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://speedtest.tele2.net/10MB.zip"
     }
+  },
+
+
+  "petstore-abl-http-get-vm" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://10.211.55.2:8080/api/store/inventory"
+    }
+  },
+  "petstore-abl-http-get" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://petstore:8080/api/store/inventory"
+    }
+  },
+  "petstore-abl-https-get" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://caddy:8443/api/store/inventory"
+    }
+  },
+  "petstore-dotnet-http-get" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://petstore:8080/api/store/inventory"
+    }
+  },
+  "petstore-dotnet-https-get" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://caddy:8443/api/store/inventory"
+    }
   }
 
 }

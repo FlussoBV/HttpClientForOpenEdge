@@ -12,6 +12,7 @@ docker rm %CONTAINER%
 echo "Run new container (interactive) ..."
 docker run -it ^
    --name %CONTAINER% ^
+   --network appnet ^
    --platform linux/amd64 ^
    -v %CD%/../license/progress.cfg:/usr/dlc/progress.cfg ^
    -v %CD%/../src:/app/src ^

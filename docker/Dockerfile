@@ -4,4 +4,7 @@ USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates
 
+# also install 'curl' to test network connections
+RUN apt-get update && apt-get install -y curl
+
 USER openedge

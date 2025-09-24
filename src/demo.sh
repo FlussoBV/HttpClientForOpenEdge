@@ -6,7 +6,7 @@ rm -f out.log
 touch out.log
 
 # copy certificates to DLC folder, since -certstorepath can only contain 1 path
-cp -p certs/* /usr/dlc/certs
+cp -v -p certs/* /usr/dlc/certs
 
 # -preloadCLR fails on Linux
 mbpro -clrnetcore -assemblies ../assemblies -q -rr -reusableObjects 500000 -p flusso/demo/demo.p -param "$1,$2" > out.log
