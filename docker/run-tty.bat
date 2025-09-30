@@ -19,4 +19,4 @@ docker run -it ^
    -v %CD%/../assemblies:/app/assemblies ^
    -v %CD%/../config:/app/config ^
    %IMAGE% ^
-   bash
+   bash -c "cp -p /app/src/certs/* /usr/dlc/certs/ && exec bash"

@@ -9,3 +9,10 @@ https://caddy:8443 {
     encode gzip               # (optioneel) compressie
     reverse_proxy petstore:8080
 }
+
+# voor Parallels windows
+https://caddy.lan:8443 {
+    tls internal              # Caddy maakt automatisch een lokaal (self-signed) cert
+    encode gzip               # (optioneel) compressie
+    reverse_proxy petstore:8080
+}
