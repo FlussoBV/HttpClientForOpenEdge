@@ -1,5 +1,5 @@
-@ECHO OFF
+@echo off
 
-IMAGE=flusso/http-client-pug-image
+image=flusso/http-client-pug-image
 
-docker build --rm --platform linux/amd64 -t %IMAGE% .
+docker build --rm --platform linux/amd64 -t %image% .

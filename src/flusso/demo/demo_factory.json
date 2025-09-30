@@ -203,20 +203,12 @@
   },
 
 
-  "petstore-abl-http-get-vm" : {
-    "class"  : "flusso.demo.DemoRunner",
-    "config" : {
-      "method"         : "GET",
-      "httpClientName" : "abl-http-client",
-      "url"            : "http://10.211.55.2:8080/api/store/inventory"
-    }
-  },
   "petstore-abl-http-get" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
       "httpClientName" : "abl-http-client",
-      "url"            : "http://petstore:8080/api/store/inventory"
+      "url"            : "http://petstore:8080/api/pet/findByStatus?status=available"
     }
   },
   "petstore-abl-https-get" : {
@@ -224,7 +216,7 @@
     "config" : {
       "method"         : "GET",
       "httpClientName" : "abl-http-client",
-      "url"            : "https://caddy:8443/api/store/inventory"
+      "url"            : "https://caddy:8443/api/pet/findByStatus?status=available"
     }
   },
   "petstore-dotnet-http-get" : {
@@ -232,7 +224,7 @@
     "config" : {
       "method"         : "GET",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "http://petstore:8080/api/store/inventory"
+      "url"            : "http://petstore:8080/api/pet/findByStatus?status=available"
     }
   },
   "petstore-dotnet-https-get" : {
@@ -240,8 +232,41 @@
     "config" : {
       "method"         : "GET",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "https://caddy:8443/api/store/inventory"
+      "url"            : "https://caddy:8443/api/pet/findByStatus?status=available"
+    }
+  },
+
+
+  "petstore-abl-http-get-vm" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://10.211.55.2:8080/api/pet/findByStatus?status=available"
+    }
+  },
+  "petstore-abl-https-get-vm" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://caddy.lan:8443/api/pet/findByStatus?status=available"
+    }
+  },
+  "petstore-dotnet-http-get-vm" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://10.211.55.2:8080/api/pet/findByStatus?status=available"
+    }
+  },
+  "petstore-dotnet-https-get-vm" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "GET",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://caddy.lan:8443/api/pet/findByStatus?status=available"
     }
   }
-
 }
