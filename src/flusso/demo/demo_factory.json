@@ -39,7 +39,8 @@
     "config" : {
       "method"         : "POST",
       "httpClientName" : "abl-http-client",
-      "url"            : "http://jsonplaceholder.typicode.com/todos"
+      "url"            : "http://jsonplaceholder.typicode.com/todos",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-abl-https-post" : {
@@ -47,7 +48,8 @@
     "config" : {
       "method"         : "POST",
       "httpClientName" : "abl-http-client",
-      "url"            : "https://jsonplaceholder.typicode.com/todos"
+      "url"            : "https://jsonplaceholder.typicode.com/todos",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-dotnet-http-post" : {
@@ -55,7 +57,8 @@
     "config" : {
       "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "http://jsonplaceholder.typicode.com/todos"
+      "url"            : "http://jsonplaceholder.typicode.com/todos",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-dotnet-https-post" : {
@@ -63,7 +66,8 @@
     "config" : {
       "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "https://jsonplaceholder.typicode.com/todos"
+      "url"            : "https://jsonplaceholder.typicode.com/todos",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
 
@@ -73,7 +77,8 @@
     "config" : {
       "method"         : "PUT",
       "httpClientName" : "abl-http-client",
-      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-abl-https-put" : {
@@ -81,7 +86,8 @@
     "config" : {
       "method"         : "PUT",
       "httpClientName" : "abl-http-client",
-      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-dotnet-http-put" : {
@@ -89,7 +95,8 @@
     "config" : {
       "method"         : "PUT",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-dotnet-https-put" : {
@@ -97,7 +104,8 @@
     "config" : {
       "method"         : "PUT",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
 
@@ -106,7 +114,8 @@
     "config" : {
       "method"         : "PATCH",
       "httpClientName" : "abl-http-client",
-      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-abl-https-patch" : {
@@ -114,7 +123,8 @@
     "config" : {
       "method"         : "PATCH",
       "httpClientName" : "abl-http-client",
-      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-dotnet-http-patch" : {
@@ -122,7 +132,8 @@
     "config" : {
       "method"         : "PATCH",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "http://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "http://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
   "demo-dotnet-https-patch" : {
@@ -130,7 +141,8 @@
     "config" : {
       "method"         : "PATCH",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "https://jsonplaceholder.typicode.com/todos/1"
+      "url"            : "https://jsonplaceholder.typicode.com/todos/1",
+      "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
     }
   },
 
@@ -203,7 +215,7 @@
   },
 
 
-  "petstore-abl-http-get" : {
+  "local-abl-http-get" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -211,7 +223,7 @@
       "url"            : "http://petstore:8080/api/pet/findByStatus?status=available"
     }
   },
-  "petstore-abl-https-get" : {
+  "local-abl-https-get" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -219,7 +231,7 @@
       "url"            : "https://caddy:8443/api/pet/findByStatus?status=available"
     }
   },
-  "petstore-dotnet-http-get" : {
+  "local-dotnet-http-get" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -227,7 +239,7 @@
       "url"            : "http://petstore:8080/api/pet/findByStatus?status=available"
     }
   },
-  "petstore-dotnet-https-get" : {
+  "local-dotnet-https-get" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
       "method"         : "GET",
@@ -237,36 +249,150 @@
   },
 
 
-  "petstore-abl-http-get-vm" : {
+  "local-abl-http-post" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
-      "method"         : "GET",
+      "method"         : "POST",
       "httpClientName" : "abl-http-client",
-      "url"            : "http://10.211.55.2:8080/api/pet/findByStatus?status=available"
+      "url"            : "http://petstore:8080/api/pet",
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
     }
   },
-  "petstore-abl-https-get-vm" : {
+  "local-abl-https-post" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
-      "method"         : "GET",
+      "method"         : "POST",
       "httpClientName" : "abl-http-client",
-      "url"            : "https://caddy.lan:8443/api/pet/findByStatus?status=available"
+      "url"            : "https://caddy:8443/api/pet",
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
     }
   },
-  "petstore-dotnet-http-get-vm" : {
+  "local-dotnet-http-post" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
-      "method"         : "GET",
+      "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "http://10.211.55.2:8080/api/pet/findByStatus?status=available"
+      "url"            : "http://petstore:8080/api/pet",
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
     }
   },
-  "petstore-dotnet-https-get-vm" : {
+  "local-dotnet-https-post" : {
     "class"  : "flusso.demo.DemoRunner",
     "config" : {
-      "method"         : "GET",
+      "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
-      "url"            : "https://caddy.lan:8443/api/pet/findByStatus?status=available"
+      "url"            : "https://caddy:8443/api/pet",
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+
+
+  "local-abl-http-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://petstore:8080/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+  "local-abl-https-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://caddy:8443/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+  "local-dotnet-http-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://petstore:8080/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+  "local-dotnet-https-put" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PUT",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://caddy:8443/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+
+
+  "local-abl-http-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://petstore:8080/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+  "local-abl-https-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://caddy:8443/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+  "local-dotnet-http-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://petstore:8080/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+  "local-dotnet-https-patch" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "PATCH",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://caddy:8443/api/pet",
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+    }
+  },
+
+
+  "local-abl-http-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "abl-http-client",
+      "url"            : "http://petstore:8080/api/pet/<autoid>"
+    }
+  },
+  "local-abl-https-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "abl-http-client",
+      "url"            : "https://caddy:8443/api/pet/<autoid>"
+    }
+  },
+  "local-dotnet-http-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "http://petstore:8080/api/pet/<autoid>"
+    }
+  },
+  "local-dotnet-https-delete" : {
+    "class"  : "flusso.demo.DemoRunner",
+    "config" : {
+      "method"         : "DELETE",
+      "httpClientName" : "dotnet-http-client",
+      "url"            : "https://caddy:8443/api/pet/<autoid>"
     }
   }
 }

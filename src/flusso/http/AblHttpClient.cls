@@ -27,7 +27,6 @@ using flusso.http.IHttpClient.
 
 class flusso.http.AblHttpClient implements IHttpClient:
 
-  //var private IHttpClientLibrary httpClientLibrary.
   var private ClientLibraryBuilder libraryBuilder. 
 
   constructor public AblHttpClient():

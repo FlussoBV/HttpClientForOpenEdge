@@ -22,10 +22,11 @@ using flusso.http.IHttpClient.
 class flusso.demo.DemoRunner
   implements IConfigurable:
 
-   var private char httpClientIdentifier.
-   var private char requestMethod.
-   var private char requestUrl.
-   var private IHttpClient  httpClient.
+   var private char httpClientIdentifier
+                  , requestMethod
+                  , requestUrl.
+   var private JsonObject requestBody.
+   var private IHttpClient httpClient.
 
   /*------------------------------------------------------------------------------
     Purpose: Configure
@@ -36,6 +37,9 @@ class flusso.demo.DemoRunner
     httpClientIdentifier = config:GetCharacter("httpClientName").
     requestMethod        = config:GetCharacter("method").
     requestUrl           = config:GetCharacter("url").
+
+    if config:Has("body") then
+      requestBody = config:GetJsonObject("body").
 
     httpClient = HttpClientFactory:Get(httpClientIdentifier).
 
@@ -67,7 +71,7 @@ class flusso.demo.DemoRunner
       when "GET" or when "DELETE"
       then ExecuteRequests(nrRuns).
       when "POST" or when "PUT" or when "PATCH"
-      then ExecuteRequestsWithBody(nrRuns).
+      then ExecuteRequestsWithBody(nrRuns, requestBody).
       otherwise undo, throw new AppError(substitute("request method '&1' not implemented", requestMethod), -1).
     end case.
 
@@ -95,21 +99,14 @@ class flusso.demo.DemoRunner
     Purpose: Execute a x number of POST/PUT/PATCH requests
     Notes:
   ------------------------------------------------------------------------------*/
-  method private void ExecuteRequestsWithBody (nrReq as int):
-
-    var JsonObject         body       = new JsonObject().
-
-    body:Add("id", 10).
-    body:Add("userId", 10).
-    body:Add("title", substitute("&1 at : &2", lc(requestMethod), iso-date(now))).
-    body:Add("completed", true).
+  method private void ExecuteRequestsWithBody (nrReq as int
+                                              ,body as JsonObject):
 
     ExecuteRequests( httpClient
                    , requestUrl
                    , requestMethod
                    , nrReq
                    , body ).
-
 
   end method.
 
@@ -127,7 +124,7 @@ class flusso.demo.DemoRunner
     var datetime-tz begin.
 
     var HttpResponse       httpResponse.
-    var HttpRequestOptions options    = new HttpRequestOptions():SetContentType("application/json").
+    var HttpRequestOptions options = new HttpRequestOptions():SetContentType("application/json").
 
     // dry run
     etime(true).
@@ -149,6 +146,7 @@ class flusso.demo.DemoRunner
 
     do i = 1 to nrReq:
       etime(true).
+
       case requestMethod:
         when "POST"   then  httpResponse = httpClient:Post(requestUrl, body, options).
         when "PUT"    then  httpResponse = httpClient:Put(requestUrl, body, options).
@@ -156,15 +154,16 @@ class flusso.demo.DemoRunner
         when "GET"    then  httpResponse = httpClient:Get(requestUrl, options).
         when "DELETE" then  httpResponse = httpClient:Delete(requestUrl, options).
       end case.
+
       this-object:HandleError(httpResponse).
+
       message substitute("&1 : etime &2 msec - &3 &4 "
                         ,string(i, "999"), etime
                         ,httpResponse:Status
-                        ,httpResponse:Reason)
-                         .
+                        ,httpResponse:Reason).
     end.
 
-    totalMsec = interval(now, begin, "milliseconds").
+    totalMsec   = interval(now, begin, "milliseconds").
     averageMsec = round(totalMsec / nrReq, 3).
 
     message substitute("~n  Finished &1 &2 requests in &3 seconds (excl. dry)~n", nrReq, requestMethod, round(totalMsec / 1000, 3))
