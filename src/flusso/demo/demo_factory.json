@@ -255,7 +255,7 @@
       "method"         : "POST",
       "httpClientName" : "abl-http-client",
       "url"            : "http://petstore:8080/api/pet",
-      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-abl-https-post" : {
@@ -264,7 +264,7 @@
       "method"         : "POST",
       "httpClientName" : "abl-http-client",
       "url"            : "https://caddy:8443/api/pet",
-      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-dotnet-http-post" : {
@@ -273,7 +273,7 @@
       "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://petstore:8080/api/pet",
-      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-dotnet-https-post" : {
@@ -282,7 +282,7 @@
       "method"         : "POST",
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://caddy:8443/api/pet",
-      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
 
@@ -293,7 +293,7 @@
       "method"         : "PUT",
       "httpClientName" : "abl-http-client",
       "url"            : "http://petstore:8080/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-abl-https-put" : {
@@ -302,7 +302,7 @@
       "method"         : "PUT",
       "httpClientName" : "abl-http-client",
       "url"            : "https://caddy:8443/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-dotnet-http-put" : {
@@ -311,7 +311,7 @@
       "method"         : "PUT",
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://petstore:8080/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-dotnet-https-put" : {
@@ -320,7 +320,7 @@
       "method"         : "PUT",
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://caddy:8443/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
 
@@ -331,7 +331,7 @@
       "method"         : "PATCH",
       "httpClientName" : "abl-http-client",
       "url"            : "http://petstore:8080/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-abl-https-patch" : {
@@ -340,7 +340,7 @@
       "method"         : "PATCH",
       "httpClientName" : "abl-http-client",
       "url"            : "https://caddy:8443/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-dotnet-http-patch" : {
@@ -349,7 +349,7 @@
       "method"         : "PATCH",
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://petstore:8080/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
   "local-dotnet-https-patch" : {
@@ -358,7 +358,7 @@
       "method"         : "PATCH",
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://caddy:8443/api/pet",
-      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Cooper","photoUrls":["www.cooper.nl"],"tags":[{"id":1,"name":"male"}],"status":"sold"}
+      "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
     }
   },
 

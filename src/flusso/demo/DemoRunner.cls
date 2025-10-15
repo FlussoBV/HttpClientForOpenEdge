@@ -12,6 +12,7 @@
 block-level on error undo, throw.
 
 using Progress.Json.ObjectModel.JsonObject.
+using Progress.Json.ObjectModel.ObjectModelParser.
 using Progress.Lang.AppError.
 using flusso.factory.IConfigurable.
 using flusso.http.HttpClientFactory.
@@ -42,6 +43,24 @@ class flusso.demo.DemoRunner
       requestBody = config:GetJsonObject("body").
 
     httpClient = HttpClientFactory:Get(httpClientIdentifier).
+
+  end method.
+
+  /*------------------------------------------------------------------------------
+    Purpose: Get the IDs out of pet_ids.json
+    Notes:
+  ------------------------------------------------------------------------------*/
+  method private JsonObject GetPetIds ():
+
+    var ObjectModelParser parser = new ObjectModelParser().
+    var JsonObject        json.
+
+    file-info:file-name = "pet_ids.json".
+    if file-info:full-pathname eq ? then return ?.
+
+    json = cast(parser:ParseFile(file-info:full-pathname), JsonObject).
+
+    return json.
 
   end method.
 
@@ -120,11 +139,13 @@ class flusso.demo.DemoRunner
                                       , nrReq as int
                                       , body as JsonObject):
 
-    var int i, totalMsec, dryRunMsec, averageMsec.
+    var int i, totalMsec, dryRunMsec, averageMsec, delCounter.
     var datetime-tz begin.
+    var char delUrl = requestUrl.
 
     var HttpResponse       httpResponse.
     var HttpRequestOptions options = new HttpRequestOptions():SetContentType("application/json").
+    var JsonObject         idObj   = this-object:GetPetIds().
 
     // dry run
     etime(true).
@@ -133,7 +154,14 @@ class flusso.demo.DemoRunner
       when "PUT"    then  httpResponse = httpClient:Put(requestUrl, body, options).
       when "PATCH"  then  httpResponse = httpClient:Patch(requestUrl, body, options).
       when "GET"    then  httpResponse = httpClient:Get(requestUrl, options).
-      when "DELETE" then  httpResponse = httpClient:Delete(requestUrl, options).
+      when "DELETE" then do:
+        if requestUrl matches "*/<autoid>" then do:
+          delCounter = idObj:GetInteger("firstId").
+          // code for local petstore to delete pets
+          delUrl = replace(requestUrl, "<autoid>", string(delCounter)).
+        end.
+        httpResponse = httpClient:Delete(delUrl, options).
+      end.
     end case.
     this-object:HandleError(httpResponse).
     dryRunMsec = etime.
@@ -152,7 +180,14 @@ class flusso.demo.DemoRunner
         when "PUT"    then  httpResponse = httpClient:Put(requestUrl, body, options).
         when "PATCH"  then  httpResponse = httpClient:Patch(requestUrl, body, options).
         when "GET"    then  httpResponse = httpClient:Get(requestUrl, options).
-        when "DELETE" then  httpResponse = httpClient:Delete(requestUrl, options).
+        when "DELETE" then do:
+          // code for local petstore to delete pets
+          if requestUrl matches "*/<autoid>" then do:
+            delCounter += 1.
+            delUrl      = replace(requestUrl, "<autoid>", string(delCounter)).
+          end.
+          httpResponse = httpClient:Delete(delUrl, options).
+        end.
       end case.
 
       this-object:HandleError(httpResponse).
@@ -171,9 +206,14 @@ class flusso.demo.DemoRunner
             substitute("~n  Average        : &1 milliseconds", string(averageMsec, "zzz9"))
             substitute("~n  Initialize     : &1 milliseconds~n", string(dryRunMsec - averageMsec, "zzz9"))
             substitute("~n  HttpClient     : &1", httpClient:GetClass():TypeName)
-            substitute("~n  Request url    : &1", requestUrl)
+            substitute("~n  Request url    : &1", requestUrl) + (if delCounter gt 10000 then substitute(" (last ID=&1)", delCounter) else "")
             substitute("~n  Request method : &1", requestMethod).
 
+    // update pet_ids.json
+    if requestMethod eq "DELETE" and valid-object(idObj) and requestUrl matches "*/<autoid>" then do:
+      idObj:Set("firstId", delCounter + 1).
+      idObj:WriteFile("pet_ids.json", true).
+    end.
   end method.
 
 end class.
