@@ -79,7 +79,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
   "demo-abl-https-put" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -88,7 +89,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-http-put" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -97,7 +99,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-https-put" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -106,7 +109,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
 
   "demo-abl-http-patch" : {
@@ -116,7 +120,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
   "demo-abl-https-patch" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -125,7 +130,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-http-patch" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -134,7 +140,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-https-patch" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -143,7 +150,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1",
       "body"           : {"id":10,"userId":10,"title":"demo-title","completed":true}
-    }
+    },
+    "disabled" : true
   },
 
 
@@ -153,7 +161,8 @@
       "method"         : "DELETE",
       "httpClientName" : "abl-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1"
-    }
+    },
+    "disabled" : true
   },
   "demo-abl-https-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -161,7 +170,8 @@
       "method"         : "DELETE",
       "httpClientName" : "abl-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1"
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-http-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -169,7 +179,8 @@
       "method"         : "DELETE",
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1"
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-https-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -177,7 +188,8 @@
       "method"         : "DELETE",
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1"
-    }
+    },
+    "disabled" : true
   },
 
 
@@ -187,7 +199,8 @@
       "method"         : "GET",
       "httpClientName" : "abl-http-client",
       "url"            : "http://www.kelters.nl/hulpSetup.zip"
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-http-get-zip" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -195,7 +208,8 @@
       "method"         : "GET",
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://www.kelters.nl/hulpSetup.zip"
-    }
+    },
+    "disabled" : true
   },
   "demo-abl-http-get-zip10mb" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -203,7 +217,8 @@
       "method"         : "GET",
       "httpClientName" : "abl-http-client",
       "url"            : "http://speedtest.tele2.net/10MB.zip"
-    }
+    },
+    "disabled" : true
   },
   "demo-dotnet-http-get-zip10mb" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -211,7 +226,8 @@
       "method"         : "GET",
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://speedtest.tele2.net/10MB.zip"
-    }
+    },
+    "disabled" : true
   },
 
 
@@ -294,7 +310,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "http://petstore:8080/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
   "local-abl-https-put" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -303,7 +320,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "https://caddy:8443/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
   "local-dotnet-http-put" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -312,7 +330,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://petstore:8080/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
   "local-dotnet-https-put" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -321,7 +340,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://caddy:8443/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
 
 
@@ -332,7 +352,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "http://petstore:8080/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
   "local-abl-https-patch" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -341,7 +362,8 @@
       "httpClientName" : "abl-http-client",
       "url"            : "https://caddy:8443/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
   "local-dotnet-http-patch" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -350,7 +372,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://petstore:8080/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
   "local-dotnet-https-patch" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -359,7 +382,8 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://caddy:8443/api/pet",
       "body"           : {"id":1,"category":{"id":1,"name":"Dogs"},"name":"Demodog","photoUrls":["www.flusso.nl"],"tags":[{"id":1,"name":"male"}],"status":"demo"}
-    }
+    },
+    "disabled" : true
   },
 
 

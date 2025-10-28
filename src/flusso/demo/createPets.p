@@ -17,6 +17,7 @@ using flusso.http.HttpRequestOptions.
 using flusso.http.HttpResponse.
 using flusso.http.IHttpClient.
 
+// default-http-client, abl-http-client, dotnet-http-client
 var char     clientIdentifier = (if session:parameter gt "" then session:parameter else "default-http-client").
 var char     postUrl          = "http://petstore:8080/api/pet".
 //var char     postUrl       = "http://10.211.55.2:8080/api/pet".
