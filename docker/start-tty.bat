@@ -1,6 +1,6 @@
-@ECHO OFF
+@echo off
 
-set CONTAINER=http-client-pug-container
+set container=http-client-pug-container
 
 echo "Start container (interactive) ..."
 
@@ -8,4 +8,4 @@ docker ps
 
 echo
 
-docker start -i %CONTAINER%
+docker start -i %container%

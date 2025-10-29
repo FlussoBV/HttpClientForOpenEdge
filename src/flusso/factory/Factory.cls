@@ -19,16 +19,17 @@ using Progress.Lang.AppError.
 
 class flusso.factory.Factory implements IFactory:
   	
-  define private temp-table ttdefintion no-undo
+  define private temp-table ttdefinition no-undo
     field identifier as char
-    field classname as char
-    field singleton as logical
-    field config as Progress.Lang.Object
+    field classname  as char
+    field singleton  as logical
+    field config     as Progress.Lang.Object
+    field disabled   as logical
     .
 
   define private temp-table ttinstance no-undo
     field objtype as char
-    field obj as Progress.Lang.Object
+    field obj     as Progress.Lang.Object
     .
 
   /*------------------------------------------------------------------------------
@@ -59,12 +60,12 @@ class flusso.factory.Factory implements IFactory:
     var Progress.Lang.Object instanceRef.
     var logical singleInstanceFound.
     
-    find ttdefintion where ttdefintion.identifier = instanceName no-error.
-    if not available(ttdefintion) then 
+    find ttdefinition where ttdefinition.identifier = instanceName no-error.
+    if not available(ttdefinition) then 
       undo, throw new AppError(substitute("no definition found for '&1'", instanceName), -1).
             
     singleInstanceFound = false.
-    if ttdefintion.singleton then do:
+    if ttdefinition.singleton then do:
       for first ttinstance where ttinstance.objtype = instanceName:
         instanceRef = ttinstance.obj.
         singleInstanceFound = true.
@@ -72,21 +73,23 @@ class flusso.factory.Factory implements IFactory:
     end. 
     
     if not valid-object(instanceRef) then do:
-      instanceRef = dynamic-new(ttdefintion.classname)() no-error.
+      if ttdefinition.disabled then
+        undo, throw new AppError(substitute("class '&1' is disabled", ttdefinition.classname), -1).
+      instanceRef = dynamic-new(ttdefinition.classname)() no-error.
 
       if     not error-status:error
          and type-of(instanceRef, IConfigurable)
-         and valid-object(ttdefintion.config) then
-        cast(instanceRef, IConfigurable):Configure(cast(ttdefintion.config, JsonObject)).
+         and valid-object(ttdefinition.config) then
+        cast(instanceRef, IConfigurable):Configure(cast(ttdefinition.config, JsonObject)).
     end.
 
     if not valid-object(instanceRef) then 
-      undo, throw new AppError(substitute("class not found: &1", ttdefintion.classname), -1).
+      undo, throw new AppError(substitute("class not found: &1", ttdefinition.classname), -1).
             
-    if ttdefintion.singleton and not singleInstanceFound then do:
+    if ttdefinition.singleton and not singleInstanceFound then do:
       create ttinstance.
       assign
-        ttinstance.objtype = ttdefintion.identifier 
+        ttinstance.objtype = ttdefinition.identifier 
         ttinstance.obj = instanceRef
         .
     end. 
@@ -110,7 +113,7 @@ class flusso.factory.Factory implements IFactory:
     @param instanceName The logical name of the requested object to delete
   ------------------------------------------------------------------------------*/
   method public logical Has(instanceName as char):
-    return can-find(first ttdefintion where ttdefintion.identifier = instanceName).
+    return can-find(first ttdefinition where ttdefinition.identifier = instanceName).
   end method.  // Has
 
   /*------------------------------------------------------------------------------
@@ -155,7 +158,7 @@ class flusso.factory.Factory implements IFactory:
     var char[] names.
     var JsonObject defintionObject, config.
     var char identifier, classname.
-    var logical singleton.
+    var logical singleton, disabled.
 
     names = jsonDefintions:GetNames().
     do i = 1 to extent(names):
@@ -173,7 +176,8 @@ class flusso.factory.Factory implements IFactory:
         when 4 then do:
           defintionObject = jsonDefintions:GetJsonObject(identifier).
           classname = defintionObject:GetCharacter("class").
-          singleton = (defintionObject:Has("singleton") and defintionObject:GetLogical("singleton")).  
+          singleton = (defintionObject:Has("singleton") and defintionObject:GetLogical("singleton")).
+          disabled  = (defintionObject:Has("disabled") and defintionObject:GetLogical("disabled")).  
           if defintionObject:Has("config") then
             config = defintionObject:GetJsonObject("config").
         end.
@@ -184,7 +188,7 @@ class flusso.factory.Factory implements IFactory:
              
       end case.
       
-      AddDefinition(identifier, classname, singleton, config).
+      AddDefinition(identifier, classname, singleton, config, disabled).
         
     end.  // do i = 1 to extent(names)...
 
@@ -198,17 +202,18 @@ class flusso.factory.Factory implements IFactory:
     @param singleton
     @param config
   ------------------------------------------------------------------------------*/
-  method private void AddDefinition(identifier as char, classname as char, singleton as logical, config as JsonObject):
+  method private void AddDefinition(identifier as char, classname as char, singleton as logical, config as JsonObject, disabled as logical):
     
-    find ttdefintion where ttdefintion.identifier = identifier no-error.
-    if not available(ttdefintion) then do:
-      create ttdefintion.
-      ttdefintion.identifier = identifier.
+    find ttdefinition where ttdefinition.identifier = identifier no-error.
+    if not available(ttdefinition) then do:
+      create ttdefinition.
+      ttdefinition.identifier = identifier.
     end.
     
-    ttdefintion.classname = classname.
-    ttdefintion.singleton = singleton. 
-    ttdefintion.config = config.
+    ttdefinition.classname = classname.
+    ttdefinition.singleton = singleton.
+    ttdefinition.disabled  = disabled.
+    ttdefinition.config    = config.
 
   end method.
 
@@ -218,8 +223,8 @@ class flusso.factory.Factory implements IFactory:
   ------------------------------------------------------------------------------*/
   method public void ShowAvailableIdentifiers ():
 
-    for each ttdefintion /*by ttdefintion.identifier*/:
-      message ttdefintion.identifier.
+    for each ttdefinition where ttdefinition.disabled eq false /*by ttdefinition.identifier*/:
+      message ttdefinition.identifier.
     end.
 
   end method.

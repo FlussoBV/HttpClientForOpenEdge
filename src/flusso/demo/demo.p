@@ -38,6 +38,7 @@ runner:Run(nrRuns).
 
 catch err as Progress.Lang.Error:
     if err:GetMessage(1) begins "no definition found" then do:
+      message "~nUsage: demo.sh <identifier>~n".
       message "~nAvailable factory identifiers:".
       message "------------------------------".
       cast(factory, Factory):ShowAvailableIdentifiers().

@@ -27,7 +27,6 @@ using flusso.http.IHttpClient.
 
 class flusso.http.AblHttpClient implements IHttpClient:
 
-  //var private IHttpClientLibrary httpClientLibrary.
   var private ClientLibraryBuilder libraryBuilder. 
 
   constructor public AblHttpClient():
@@ -116,16 +115,22 @@ class flusso.http.AblHttpClient implements IHttpClient:
       response:Headers = GetHeaders(oeResponse).
 
       // tlserr has more properties, inner error and methods
-      catch tlserr as TlsClientAuthenticationError :
+      catch tlserr as TlsClientAuthenticationError:
           response:Status = 525. // SSL Handshake Failed
           response:Reason = tlserr:GetShortMessage().
           //if valid-object(tlserr:InnerError) then
           //  response:Reason += " / " + tlserr:InnerError:GetMessage(1).
       end catch.
 
-      catch err1 as Progress.Lang.Error:
-        response:Status = int(err1:GetMessage(1)).
-        response:Reason = substitute("&1:&2 - &3", err1:GetMessage(2), err1:GetMessage(3), err1:GetMessage(4)).
+      catch err as Progress.Lang.Error:
+        define variable errcode as int no-undo initial ?.
+        errcode = int(err:GetMessage(1)) no-error.
+        if errcode eq ? then
+          assign response:Status = 500
+                 response:Reason = err:GetMessage(1).
+        else
+          assign response:Status = errcode
+                 response:Reason = substitute("&1:&2 - &3", err:GetMessage(2), err:GetMessage(3), err:GetMessage(4)).
       end catch.
 
     end.  // do on error...

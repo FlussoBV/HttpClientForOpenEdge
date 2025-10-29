@@ -12,6 +12,7 @@ workspace/
 
 *.r
 src/out.log
+client.log
 **/.DS_Store
 docker/._*
 
