@@ -74,7 +74,7 @@ class flusso.factory.Factory implements IFactory:
     
     if not valid-object(instanceRef) then do:
       if ttdefinition.disabled then
-        undo, throw new AppError(substitute("class '&1' is disabled", ttdefinition.classname), -1).
+        undo, throw new AppError(substitute("factory '&1' is disabled", instanceName), -1).
       instanceRef = dynamic-new(ttdefinition.classname)() no-error.
 
       if     not error-status:error

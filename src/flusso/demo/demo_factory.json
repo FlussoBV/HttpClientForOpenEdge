@@ -162,7 +162,7 @@
       "httpClientName" : "abl-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1"
     },
-    "disabled" : true
+    "disabled" : false
   },
   "demo-abl-https-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -171,7 +171,7 @@
       "httpClientName" : "abl-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1"
     },
-    "disabled" : true
+    "disabled" : false
   },
   "demo-dotnet-http-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -180,7 +180,7 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "http://jsonplaceholder.typicode.com/todos/1"
     },
-    "disabled" : true
+    "disabled" : false
   },
   "demo-dotnet-https-delete" : {
     "class"  : "flusso.demo.DemoRunner",
@@ -189,7 +189,7 @@
       "httpClientName" : "dotnet-http-client",
       "url"            : "https://jsonplaceholder.typicode.com/todos/1"
     },
-    "disabled" : true
+    "disabled" : false
   },
 
 

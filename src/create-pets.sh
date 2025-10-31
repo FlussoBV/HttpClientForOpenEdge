@@ -6,6 +6,6 @@ rm -f out.log
 touch out.log
 
 # -preloadCLR fails on Linux
-mbpro -pf demo.pf clrnetcore -assemblies ../assemblies -q -rr -reusableObjects 500000 -p flusso/demo/createPets.p -param "$1" > out.log
+mbpro -clrnetcore -assemblies ../assemblies -q -rr -reusableObjects 500000 -p flusso/demo/createPets.p -param "$1" > out.log
 
 tail -f out.log
