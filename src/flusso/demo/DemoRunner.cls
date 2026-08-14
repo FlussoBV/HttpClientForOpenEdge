@@ -29,6 +29,8 @@ class flusso.demo.DemoRunner
    var private JsonObject requestBody.
    var private IHttpClient httpClient.
 
+    define stream sss.
+
   /*------------------------------------------------------------------------------
     Purpose: Configure
     Notes:
